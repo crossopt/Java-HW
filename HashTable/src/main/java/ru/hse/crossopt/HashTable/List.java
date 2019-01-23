@@ -46,8 +46,8 @@ public class List {
      * @return true if the given key is in the list, false otherwise
      */
     public boolean contains(String key) {
-        for (Node cnt = head; cnt.next != null; cnt = cnt.next) {
-            if (Objects.equals(key, cnt.next.key)) {
+        for (Node current = head; current.next != null; current = current.next) {
+            if (Objects.equals(key, current.next.key)) {
                 return true;
             }
         }
@@ -59,9 +59,9 @@ public class List {
      * @return Value string with given key or null if none exist.
      */
     public String get(String key) {
-        for (Node cnt = head; cnt.next != null; cnt = cnt.next) {
-            if (Objects.equals(key, cnt.next.key)) {
-                return cnt.next.value;
+        for (Node current = head; current.next != null; current = current.next) {
+            if (Objects.equals(key, current.next.key)) {
+                return current.next.value;
             }
         }
         return null;
@@ -71,11 +71,11 @@ public class List {
      * Adds node with given key and value to end of list.
      */
     private void add(String key, String value) {
-        Node cnt = head;
-        while (cnt.next != null) {
-            cnt = cnt.next;
+        Node current = head;
+        while (current.next != null) {
+            current = current.next;
         }
-        cnt.next = new Node(key, value);
+        current.next = new Node(key, value);
     }
 
     /**
@@ -83,9 +83,9 @@ public class List {
      * @return Previous value with given key if it exists or null otherwise.
      */
     public String put(String key, String value) {
-        String res = remove(key);
+        String removed = remove(key);
         add(key, value);
-        return res;
+        return removed;
     }
 
     /**
@@ -93,11 +93,11 @@ public class List {
      * @return Value of removed node or null if it did not exist.
      */
     public String remove(String key) {
-        for (Node cnt = head; cnt.next != null; cnt = cnt.next) {
-            if (Objects.equals(key, cnt.next.key)) {
-                String res = cnt.next.value;
-                cnt.next = cnt.next.next;
-                return res;
+        for (Node current = head; current.next != null; current = current.next) {
+            if (Objects.equals(key, current.next.key)) {
+                String removed = current.next.value;
+                current.next = current.next.next;
+                return removed;
             }
         }
         return null;
