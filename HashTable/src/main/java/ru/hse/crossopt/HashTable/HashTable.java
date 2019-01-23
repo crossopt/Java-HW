@@ -18,9 +18,7 @@ public class HashTable {
      * Constructor. Creates hash table with INITIAL_CAPACITY buckets.
      */
     public HashTable() {
-        capacity = INITIAL_CAPACITY;
-        buckets = new List[capacity];
-        Arrays.setAll(buckets, ind -> new List());
+        clear();
     }
 
     /**
@@ -103,10 +101,12 @@ public class HashTable {
 
     /**
      * Clears hash table.
-     * Leaves a hash table with the same capacity and size 0. All buckets exist and are empty.
+     * Leaves a hash table with capacity INITIAL_CAPACITY and size 0.
      */
     void clear() {
         size = 0;
+        capacity = INITIAL_CAPACITY;
+        buckets = new List[capacity];
         Arrays.setAll(buckets, ind -> new List());
     }
 }
