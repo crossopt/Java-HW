@@ -1,6 +1,8 @@
 package ru.hse.crossopt.HashTable;
 
 
+import java.util.Objects;
+
 /**
  * Singly linked list.
  */
@@ -45,7 +47,7 @@ public class List {
      */
     public boolean contains(String key) {
         for (Node cnt = head; cnt.next != null; cnt = cnt.next) {
-            if (key.equals(cnt.next.key)) {
+            if (Objects.equals(key, cnt.next.key)) {
                 return true;
             }
         }
@@ -58,7 +60,7 @@ public class List {
      */
     public String get(String key) {
         for (Node cnt = head; cnt.next != null; cnt = cnt.next) {
-            if (key.equals(cnt.next.key)) {
+            if (Objects.equals(key, cnt.next.key)) {
                 return cnt.next.value;
             }
         }
@@ -92,7 +94,7 @@ public class List {
      */
     public String remove(String key) {
         for (Node cnt = head; cnt.next != null; cnt = cnt.next) {
-            if (key.equals(cnt.next.key)) {
+            if (Objects.equals(key, cnt.next.key)) {
                 String res = cnt.next.value;
                 cnt.next = cnt.next.next;
                 return res;
