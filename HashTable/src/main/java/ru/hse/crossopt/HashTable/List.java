@@ -4,7 +4,7 @@ import java.util.Objects;
 
 /** Singly linked list. */
 public class List {
-    private Node head;
+    private Node head = new Node(null, null);;
 
     /** Elements of list. Store a key, a value and the next node in the list. */
     private static class Node {
@@ -16,11 +16,6 @@ public class List {
             this.key = key;
             this.value = value;
         }
-    }
-
-    /** Constructor. Creates a dummy head. */
-    List() {
-        head = new Node(null, null);
     }
 
     /**
