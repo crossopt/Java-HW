@@ -1,6 +1,5 @@
 package ru.hse.crossopt.HashTable;
 
-
 import java.util.Objects;
 
 /** Singly linked list. */
