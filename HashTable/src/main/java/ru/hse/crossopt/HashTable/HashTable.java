@@ -2,6 +2,8 @@ package ru.hse.crossopt.HashTable;
 
 import java.util.Arrays;
 
+import static java.lang.Math.abs;
+
 /**
  * Hash table that stores pairs of strings.
  * Implemented via separate chaining with linked lists.
@@ -29,7 +31,7 @@ public class HashTable {
         if (key == null) {
             return 0;
         }
-        return ((key.hashCode() % capacity) + capacity) % capacity;
+        return abs(key.hashCode()) % capacity;
     }
 
     /**
