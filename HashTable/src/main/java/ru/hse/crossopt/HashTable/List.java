@@ -3,15 +3,11 @@ package ru.hse.crossopt.HashTable;
 
 import java.util.Objects;
 
-/**
- * Singly linked list.
- */
+/** Singly linked list. */
 public class List {
     private Node head;
 
-    /**
-     * Elements of list. Store a key, a value and the next node in the list.
-     */
+    /** Elements of list. Store a key, a value and the next node in the list. */
     private static class Node {
         private Node next;
         private String key;
@@ -23,9 +19,7 @@ public class List {
         }
     }
 
-    /**
-     * Constructor. Creates a dummy head.
-     */
+    /** Constructor. Creates a dummy head. */
     List() {
         head = new Node(null, null);
     }
@@ -67,9 +61,7 @@ public class List {
         return null;
     }
 
-    /**
-     * Adds node with given key and value to end of list.
-     */
+    /** Adds node with given key and value to end of list. */
     private void add(String key, String value) {
         Node current = head;
         while (current.next != null) {

@@ -16,9 +16,7 @@ public class HashTable {
     private static final int INITIAL_CAPACITY = 2;
     private static final int LOAD_FACTOR = 2;
 
-    /**
-     * Constructor. Creates hash table with INITIAL_CAPACITY buckets.
-     */
+    /** Constructor. Creates hash table with INITIAL_CAPACITY buckets. */
     public HashTable() {
         clear();
     }
@@ -34,9 +32,7 @@ public class HashTable {
         return abs(key.hashCode()) % capacity;
     }
 
-    /**
-     * Increases capacity of hash table by LOAD_FACTOR.
-     */
+    /** Increases capacity of hash table by LOAD_FACTOR. */
     private void rebuild() {
         List[] oldData = buckets;
         capacity *= LOAD_FACTOR;
