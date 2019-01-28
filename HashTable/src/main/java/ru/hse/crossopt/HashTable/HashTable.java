@@ -73,10 +73,14 @@ public class HashTable {
     }
 
     /**
-     * Puts node with given key and value in hash table.
+     * Puts node with given key and non-null value in hash table.
      * @return Previous value with given key if it exists or null otherwise.
+     * @throws IllegalArgumentException if value string is null.
      */
-    public String put(String key, String value) {
+    public String put(String key, String value) throws IllegalArgumentException {
+        if (value == null) {
+            throw new IllegalArgumentException("Value string cannot be null.");
+        }
         if (size * LOAD_FACTOR >= capacity) {
             rebuild();
         }

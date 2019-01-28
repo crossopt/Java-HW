@@ -63,6 +63,11 @@ class ListTest {
     }
 
     @Test
+    void put_valueNull() {
+        assertThrows(IllegalArgumentException.class, () -> list.put("Queen", null));
+    }
+
+    @Test
     void put_existingElement() {
         assertEquals("Airplane", list.put("Jefferson", "Starship"));
     }

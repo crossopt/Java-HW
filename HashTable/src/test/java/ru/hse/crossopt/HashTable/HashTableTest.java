@@ -63,6 +63,11 @@ class HashTableTest {
     }
 
     @Test
+    void put_valueNull() {
+        assertThrows(IllegalArgumentException.class, () -> hashTable.put("Queen", null));
+    }
+
+    @Test
     void put_existingElement() {
         assertEquals("Airplane", hashTable.put("Jefferson", "Starship"));
     }
