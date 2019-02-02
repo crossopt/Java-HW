@@ -8,7 +8,7 @@ import java.util.HashMap;
 public class Trie implements Serializable {
     private Node root = new Node();
 
-    private class Node {
+    private static class Node {
         private boolean isTerminal;
         private int suffixAmount;
         private HashMap <Character, Node> nextNode = new HashMap<>();
