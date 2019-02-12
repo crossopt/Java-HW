@@ -93,6 +93,14 @@ class TrieTest {
     }
 
     @Test
+    void operationsWithNull() {
+        assertThrows(IllegalArgumentException.class, () -> testTrie.contains(null));
+        assertThrows(IllegalArgumentException.class, () -> testTrie.add(null));
+        assertThrows(IllegalArgumentException.class, () -> testTrie.remove(null));
+        assertThrows(IllegalArgumentException.class, () -> testTrie.howManyStartWithPrefix(null));
+    }
+
+    @Test
     void serializeAndDeserialize() throws IOException {
         var byteArrayOutputStream = new ByteArrayOutputStream();
         testTrie.serialize(byteArrayOutputStream);
@@ -106,5 +114,12 @@ class TrieTest {
         assertTrue(serializedResult.contains("car"));
         assertTrue(serializedResult.contains("cat"));
         assertTrue(serializedResult.contains("dog"));
+    }
+
+    @Test
+    void serializingException() {
+        var byteArrayOutputStream = new ByteArrayOutputStream();
+        var emptyInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+        assertThrows(IOException.class, () -> testTrie.deserialize(emptyInputStream));
     }
 }
