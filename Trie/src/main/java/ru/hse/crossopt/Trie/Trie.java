@@ -8,46 +8,6 @@ import java.util.HashMap;
 public class Trie implements Serializable {
     private Node root = new Node();
 
-    private static class Node {
-        private boolean isTerminal;
-        private int suffixAmount;
-        private HashMap <Character, Node> nextNode = new HashMap<>();
-
-        private Node getNext(char symbol) {
-            if (!nextNode.containsKey(symbol)) {
-                nextNode.put(symbol, new Node());
-            }
-            return nextNode.get(symbol);
-        }
-
-        private boolean existsNext(char symbol) {
-            return nextNode.containsKey(symbol);
-        }
-
-        private void serialize(ObjectOutputStream objectOutputStream) throws IOException {
-            objectOutputStream.writeBoolean(isTerminal);
-            objectOutputStream.writeInt(suffixAmount);
-            objectOutputStream.writeInt(nextNode.size());
-            for (var element : nextNode.entrySet()) {
-                objectOutputStream.writeChar(element.getKey());
-                element.getValue().serialize(objectOutputStream);
-            }
-        }
-
-        private void deserialize(ObjectInputStream objectInputStream) throws IOException {
-            isTerminal = objectInputStream.readBoolean();
-            suffixAmount = objectInputStream.readInt();
-            nextNode.clear();
-            int nextNodeSize = objectInputStream.readInt();
-            for (int i = 0; i < nextNodeSize; i++) {
-                char symbol = objectInputStream.readChar();
-                var nodeForSymbol = new Node();
-                nodeForSymbol.deserialize(objectInputStream);
-                nextNode.put(symbol, nodeForSymbol);
-            }
-        }
-    }
-
     /**
      * Checks if given string is in trie.
      * Runs in O(n) time, where n is the length of the given string.
@@ -149,6 +109,46 @@ public class Trie implements Serializable {
     public void deserialize(InputStream in) throws IOException {
         try (var objectInputStream = new ObjectInputStream(in)) {
             root.deserialize(objectInputStream);
+        }
+    }
+
+    private static class Node {
+        private boolean isTerminal;
+        private int suffixAmount;
+        private HashMap <Character, Node> nextNode = new HashMap<>();
+
+        private Node getNext(char symbol) {
+            if (!nextNode.containsKey(symbol)) {
+                nextNode.put(symbol, new Node());
+            }
+            return nextNode.get(symbol);
+        }
+
+        private boolean existsNext(char symbol) {
+            return nextNode.containsKey(symbol);
+        }
+
+        private void serialize(ObjectOutputStream objectOutputStream) throws IOException {
+            objectOutputStream.writeBoolean(isTerminal);
+            objectOutputStream.writeInt(suffixAmount);
+            objectOutputStream.writeInt(nextNode.size());
+            for (var element : nextNode.entrySet()) {
+                objectOutputStream.writeChar(element.getKey());
+                element.getValue().serialize(objectOutputStream);
+            }
+        }
+
+        private void deserialize(ObjectInputStream objectInputStream) throws IOException {
+            isTerminal = objectInputStream.readBoolean();
+            suffixAmount = objectInputStream.readInt();
+            nextNode.clear();
+            int nextNodeSize = objectInputStream.readInt();
+            for (int i = 0; i < nextNodeSize; i++) {
+                char symbol = objectInputStream.readChar();
+                var nodeForSymbol = new Node();
+                nodeForSymbol.deserialize(objectInputStream);
+                nextNode.put(symbol, nodeForSymbol);
+            }
         }
     }
 }
