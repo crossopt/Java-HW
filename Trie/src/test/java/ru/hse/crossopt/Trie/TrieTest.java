@@ -3,15 +3,14 @@ package ru.hse.crossopt.Trie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TrieTest {
     Trie emptyTrie;
     Trie testTrie;
+    Trie shortTrie;
 
     @BeforeEach
     void setUp() {
@@ -22,6 +21,11 @@ class TrieTest {
         testTrie.add("car");
         testTrie.add("cart");
         testTrie.add("care");
+        shortTrie = new Trie();
+        shortTrie.add("dg");
+        shortTrie.add("ct");
+        shortTrie.add("c");
+        shortTrie.add("cr");
     }
 
     @Test
@@ -121,5 +125,88 @@ class TrieTest {
         var byteArrayOutputStream = new ByteArrayOutputStream();
         var emptyInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
         assertThrows(IOException.class, () -> testTrie.deserialize(emptyInputStream));
+    }
+
+    @Test
+    void serializeOnly() throws IOException {
+        var byteArrayOutputStream = new ByteArrayOutputStream();
+        shortTrie.serialize(byteArrayOutputStream);
+        var byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+        var objectInputStream = new ObjectInputStream(byteArrayInputStream);
+        assertFalse(objectInputStream.readBoolean());
+        assertEquals(4, objectInputStream.readInt());
+        assertEquals(2, objectInputStream.readInt());
+
+        assertEquals('c', objectInputStream.readChar());
+        assertTrue(objectInputStream.readBoolean());
+        assertEquals(3, objectInputStream.readInt());
+        assertEquals(2, objectInputStream.readInt());
+
+        assertEquals('r', objectInputStream.readChar());
+        assertTrue(objectInputStream.readBoolean());
+        assertEquals(1, objectInputStream.readInt());
+        assertEquals(0, objectInputStream.readInt());
+
+        assertEquals('t', objectInputStream.readChar());
+        assertTrue(objectInputStream.readBoolean());
+        assertEquals(1, objectInputStream.readInt());
+        assertEquals(0, objectInputStream.readInt());
+
+        assertEquals('d', objectInputStream.readChar());
+        assertFalse(objectInputStream.readBoolean());
+        assertEquals(1, objectInputStream.readInt());
+        assertEquals(1, objectInputStream.readInt());
+
+        assertEquals('g', objectInputStream.readChar());
+        assertTrue(objectInputStream.readBoolean());
+        assertEquals(1, objectInputStream.readInt());
+        assertEquals(0, objectInputStream.readInt());
+
+        assertThrows(EOFException.class, objectInputStream::readObject);
+    }
+
+    @Test
+    void deserializeOnly() throws IOException {
+        var byteArrayOutputStream = new ByteArrayOutputStream();
+        var objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+
+        objectOutputStream.writeBoolean(false);
+        objectOutputStream.writeInt(4);
+        objectOutputStream.writeInt(2);
+
+        objectOutputStream.writeChar('c');
+        objectOutputStream.writeBoolean(true);
+        objectOutputStream.writeInt(3);
+        objectOutputStream.writeInt(2);
+
+        objectOutputStream.writeChar('r');
+        objectOutputStream.writeBoolean(true);
+        objectOutputStream.writeInt(1);
+        objectOutputStream.writeInt(0);
+
+        objectOutputStream.writeChar('t');
+        objectOutputStream.writeBoolean(true);
+        objectOutputStream.writeInt(1);
+        objectOutputStream.writeInt(0);
+
+        objectOutputStream.writeChar('d');
+        objectOutputStream.writeBoolean(false);
+        objectOutputStream.writeInt(1);
+        objectOutputStream.writeInt(1);
+
+        objectOutputStream.writeChar('g');
+        objectOutputStream.writeBoolean(true);
+        objectOutputStream.writeInt(1);
+        objectOutputStream.writeInt(0);
+        objectOutputStream.flush();
+
+        var byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+        testTrie.deserialize(byteArrayInputStream);
+
+        assertEquals(4, testTrie.size());
+        assertTrue(testTrie.contains("dg"));
+        assertTrue(testTrie.contains("c"));
+        assertTrue(testTrie.contains("ct"));
+        assertTrue(testTrie.contains("cr"));
     }
 }
