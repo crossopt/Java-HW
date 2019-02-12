@@ -1,12 +1,13 @@
 package ru.hse.crossopt.Trie;
 
+import org.jetbrains.annotations.NotNull;
 import ru.hse.crossopt.Serializable.Serializable;
 import java.io.*;
 import java.util.HashMap;
 
 /** Trie class that stores strings. */
 public class Trie implements Serializable {
-    private Node root = new Node();
+    @NotNull private Node root = new Node();
 
     /**
      * Checks if given string is in trie.
@@ -14,7 +15,7 @@ public class Trie implements Serializable {
      * @param element a string for which to check whether it is in trie.
      * @return true if the given string is in the trie or false otherwise.
      */
-    public boolean contains(String element) {
+    public boolean contains(@NotNull String element) {
         Node current = root;
         for (char symbol : element.toCharArray()) {
             if (!current.existsNext(symbol)) {
@@ -31,7 +32,7 @@ public class Trie implements Serializable {
      * @param element a string to add to trie.
      * @return true if a new element has been added or false otherwise.
      */
-    public boolean add(String element) {
+    public boolean add(@NotNull String element) {
         if (contains(element)) {
             return false;
         }
@@ -51,7 +52,7 @@ public class Trie implements Serializable {
      * @param element a string to remove from trie.
      * @return true if the string had been in the trie prior to removal or false otherwise.
      */
-    public boolean remove(String element) {
+    public boolean remove(@NotNull String element) {
         if (!contains(element)) {
             return false;
         }
@@ -79,7 +80,7 @@ public class Trie implements Serializable {
      * @param prefix a prefix for which to count amount of strings.
      * @return amount of strings in trie that start with given prefix.
      */
-    public int howManyStartWithPrefix(String prefix) {
+    public int howManyStartWithPrefix(@NotNull String prefix) {
         Node current = root;
         for (char symbol : prefix.toCharArray()) {
             if (!current.existsNext(symbol)) {
@@ -115,9 +116,9 @@ public class Trie implements Serializable {
     private static class Node {
         private boolean isTerminal;
         private int suffixAmount;
-        private HashMap <Character, Node> nextNode = new HashMap<>();
+        @NotNull private HashMap <Character, Node> nextNode = new HashMap<>();
 
-        private Node getNext(char symbol) {
+        @NotNull private Node getNext(char symbol) {
             if (!nextNode.containsKey(symbol)) {
                 nextNode.put(symbol, new Node());
             }
