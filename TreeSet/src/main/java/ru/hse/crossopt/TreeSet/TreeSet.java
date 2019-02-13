@@ -148,7 +148,7 @@ public class TreeSet<E> extends AbstractSet<E> implements MyTreeSet<E> {
         if (tree.root == null) {
             throw new NoSuchElementException("No elements in TreeSet");
         }
-        return tree.root.getMin(isReversed).value;
+        return tree.root.getFirst(isReversed).value;
     }
 
     /**
@@ -161,7 +161,7 @@ public class TreeSet<E> extends AbstractSet<E> implements MyTreeSet<E> {
         if (tree.root == null) {
             throw new NoSuchElementException("No elements in TreeSet");
         }
-        return tree.root.getMin(!isReversed).value;
+        return tree.root.getFirst(!isReversed).value;
     }
 
     /**
@@ -174,8 +174,8 @@ public class TreeSet<E> extends AbstractSet<E> implements MyTreeSet<E> {
         if (tree.root == null) {
             return null;
         }
-        Node result = tree.root.findLower(element, isReversed);
-        return result == null ? null : result.value;
+        Node lowerNode = tree.root.findLower(element, isReversed);
+        return lowerNode == null ? null : lowerNode.value;
     }
 
     /**
@@ -189,8 +189,8 @@ public class TreeSet<E> extends AbstractSet<E> implements MyTreeSet<E> {
         if (tree.root == null) {
             return null;
         }
-        Node result = tree.root.find(element);
-        return result != null ? result.value : lower(element);
+        Node elementNode = tree.root.find(element);
+        return elementNode != null ? elementNode.value : lower(element);
     }
 
     /**
@@ -204,8 +204,8 @@ public class TreeSet<E> extends AbstractSet<E> implements MyTreeSet<E> {
         if (tree.root == null) {
             return null;
         }
-        Node result = tree.root.find(element);
-        return result != null ? result.value : higher(element);
+        Node elementNode = tree.root.find(element);
+        return elementNode != null ? elementNode.value : higher(element);
     }
 
     /**
@@ -218,8 +218,8 @@ public class TreeSet<E> extends AbstractSet<E> implements MyTreeSet<E> {
         if (tree.root == null) {
             return null;
         }
-        Node result = tree.root.findLower(element, !isReversed);
-        return result == null ? null : result.value;
+        Node higherNode = tree.root.findLower(element, !isReversed);
+        return higherNode == null ? null : higherNode.value;
     }
 
     private class Node {
@@ -245,9 +245,9 @@ public class TreeSet<E> extends AbstractSet<E> implements MyTreeSet<E> {
             return reverse ? left : right;
         }
 
-        @NotNull private Node getMin(boolean reverse) {
+        @NotNull private Node getFirst(boolean reverse) {
             Node next = getLeft(reverse);
-            return next == null ? this : next.getMin(reverse);
+            return next == null ? this : next.getFirst(reverse);
         }
 
         @Nullable private Node getLargerAncestor(boolean reverse) {
@@ -259,7 +259,7 @@ public class TreeSet<E> extends AbstractSet<E> implements MyTreeSet<E> {
 
         @Nullable private Node getNext(boolean reverse) {
             Node next = getRight(reverse);
-            return next == null ? getLargerAncestor(reverse) : next.getMin(reverse);
+            return next == null ? getLargerAncestor(reverse) : next.getFirst(reverse);
         }
 
         @Nullable private Node nextInPathTo(E element) {
@@ -302,7 +302,7 @@ public class TreeSet<E> extends AbstractSet<E> implements MyTreeSet<E> {
                     left.parent = parent;
                     return left;
                 } else {
-                    value = getMin(false).value;
+                    value = getFirst(false).value;
                     left = left.removeNode(value);
                 }
             } else {
@@ -370,7 +370,7 @@ public class TreeSet<E> extends AbstractSet<E> implements MyTreeSet<E> {
             if (tree.root == null) {
                 return null;
             } else if (current == null) {
-                return tree.root.getMin(isDescending);
+                return tree.root.getFirst(isDescending);
             } else {
                 return current.getNext(isDescending);
             }
