@@ -33,7 +33,7 @@ public class TreeSet<E> extends AbstractSet<E> implements MyTreeSet<E> {
     /**
      * Adds given element to the TreeSet.
      * @param element an element to be added to the set.
-     * @return false if element was not in set previously or true otherwise.
+     * @return true if element was not in set previously or false otherwise.
      */
     @Override
     public boolean add(@NotNull E element) {
