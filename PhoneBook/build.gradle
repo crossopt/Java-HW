@@ -1,6 +1,10 @@
 plugins {
     id 'java'
+    id 'application'
 }
+
+apply plugin:'application'
+mainClassName = "ru.hse.crossopt.PhoneBook.Main"
 
 group 'crossopt'
 version '1.0'
@@ -21,4 +25,8 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+run{
+    standardInput = System.in
 }

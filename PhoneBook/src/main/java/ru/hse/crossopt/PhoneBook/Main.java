@@ -208,7 +208,7 @@ public class Main {
     }
 
     /** main function that reads commands from stdin and executes them. */
-    public static void main() {
+    public static void main(String[] args) {
         printPossibleCommands();
         while (true) {
             try {
