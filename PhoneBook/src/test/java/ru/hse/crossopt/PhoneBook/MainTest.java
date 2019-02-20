@@ -21,7 +21,7 @@ class MainTest {
         var outputFile = new FileOutputStream(new File("src/test/resources/mainTest.out"));
         System.setIn(inputFile);
         System.setOut(new PrintStream(outputFile));
-        Main.main();
+        Main.main(new String[0]);
         var actual = Paths.get("src/test/resources/mainTest.out");
         var expected = Paths.get("src/test/resources/mainTest.ans");
         assertArrayEquals(Files.readAllBytes(actual), Files.readAllBytes(expected));
