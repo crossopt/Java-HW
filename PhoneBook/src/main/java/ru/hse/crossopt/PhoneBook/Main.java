@@ -2,7 +2,9 @@ package ru.hse.crossopt.PhoneBook;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.NoSuchElementException;
 import java.util.Scanner;
+
 
 /**
  * Console application that is implementation of interactive phone book.
@@ -19,10 +21,10 @@ import java.util.Scanner;
  */
 public class Main {
     private static final Scanner SCANNER = new Scanner(System.in);
-    private static final PhoneBook phonebook = new PhoneBook("myPhoneBook");
+    private static final PhoneBook phonebook = new PhoneBook();
 
     /** Prints a list of the available commands to stdout. */
-    private static void outputCommands() {
+    private static void printPossibleCommands() {
         System.out.println("Format is:");
         System.out.println("0: exit program");
         System.out.println("1: add entry");
@@ -36,12 +38,12 @@ public class Main {
     }
 
     /**
-     * Tries to add entry given by user to phone book and prints result to stdout.
-     * Result is either a message that the entry was added successfully,
-     * or that the entry already was in the phone book.
+     * Tries to add entry to phone book and prints to stdout
+     * either a message that the entry was added successfully,
+     * or a message that the entry was already in the phone book.
+     * @param entry an entry to add.
      */
-    private static void addEntry() {
-        var entry = readEntry();
+    private static void addEntry(@NotNull PhoneBookEntry entry) {
         if (phonebook.add(entry)) {
             System.out.println("Entry added successfully!");
         } else {
@@ -50,12 +52,12 @@ public class Main {
     }
 
     /**
-     * Tries to remove entry given by user from phone book and prints result to stdout.
-     * Result is either a message that the entry was removed successfully,
-     * or that the entry wasn't in the phone book.
+     * Tries to remove entry from phone book and prints to stdout
+     * either a message that the entry was removed successfully,
+     * or a message that the entry wasn't in the phone book.
+     * @param entry an entry to remove.
      */
-    private static void removeEntry() {
-        var entry = readEntry();
+    private static void removeEntry(@NotNull PhoneBookEntry entry) {
         if (phonebook.remove(entry)) {
             System.out.println("Entry removed successfully!");
         } else {
@@ -64,11 +66,11 @@ public class Main {
     }
 
     /**
-     * Prints all phone numbers with the name given by the user to stdout.
-     * Prints an extra message if no entries with the given name exist.
+     * Prints all phone numbers with the given name to stdout.
+     * Prints an extra message if no phone numbers with the given name exist.
+     * @param name a name to find all numbers for.
      */
-    private static void findNumbersByName() {
-        String name = readName();
+    private static void findNumbersByName(@NotNull String name) {
         var numbersByName = phonebook.findByName(name);
         if (numbersByName.size() == 0) {
             System.out.println("There are no entries with this name in the phone book.");
@@ -77,11 +79,11 @@ public class Main {
     }
 
     /**
-     * Prints all names with the phone number given by the user to stdout.
+     * Prints all names with the given phone number to stdout.
      * Prints an extra message if no names with the given phone number exist.
+     * @param number a number to find all names for.
      */
-    private static void findNamesByNumber() {
-        String number = readNumber();
+    private static void findNamesByNumber(@NotNull String number) {
         var namesByNumber = phonebook.findByNumber(number);
         if (namesByNumber.size() == 0) {
             System.out.println("There are no entries with this number in the phone book.");
@@ -91,14 +93,12 @@ public class Main {
 
     /**
      * Changes name for an entry given by user to a new name, also given by the user.
-     * Prints result to stdout.
-     * Result is either a message that the entry was changed successfully,
-     * or that the entry wasn't in the phone book.
+     * Prints either a message that the entry was changed successfully,
+     * or a message that the entry wasn't in the phone book to stdout.
+     * @param entry an entry to change.
+     * @param newName the new name for the entry.
      */
-    private static void changeName() {
-        var entry = readEntry();
-        System.out.println("Enter new name: ");
-        String newName = SCANNER.next();
+    private static void changeNameOfEntry(@NotNull PhoneBookEntry entry, @NotNull String newName) {
         if (phonebook.changeName(entry, newName)) {
             System.out.println("Entry name changed successfully!");
         } else {
@@ -107,15 +107,13 @@ public class Main {
     }
 
     /**
-     * Changes phone number for an entry given by user to a new number, also given by the user.
-     * Prints result to stdout.
-     * Result is either a message that the entry was changed successfully,
-     * or that the entry wasn't in the phone book.
+     * Changes phone number for an entry to a new number.
+     * Prints either a message that the entry was changed successfully,
+     * or a message that the entry wasn't in the phone book to stdout.
+     * @param entry an entry to change.
+     * @param newNumber the new number for the entry.
      */
-    private static void changeNumber() {
-        var entry = readEntry();
-        System.out.println("Enter new number: ");
-        String newNumber = SCANNER.next();
+    private static void changeNumberOfEntry(@NotNull PhoneBookEntry entry, @NotNull String newNumber) {
         if (phonebook.changeNumber(entry, newNumber)) {
             System.out.println("Entry number changed successfully!");
         } else {
@@ -142,68 +140,123 @@ public class Main {
     }
 
     /**
-     * Prompts user for a name and reads it from stdin.
+     * Prompts user for an existing name and reads it from stdin.
+     * @throws NoSuchElementException if no name was inputted and stdin is empty.
      * @return a correct name.
      */
-    @NotNull private static String readName() {
-        System.out.println("Enter name:");
+    @NotNull private static String readName() throws NoSuchElementException {
+        System.out.println("Enter name of entry in the phone book:");
         return SCANNER.next();
     }
 
     /**
-     * Prompts user for a telephone number and reads it from stdin.
+     * Prompts user for a new name and reads it from stdin.
+     * @throws NoSuchElementException if no name was inputted and stdin is empty.
+     * @return a correct name.
+     */
+    @NotNull private static String readNewName() throws NoSuchElementException {
+        System.out.println("Enter new name:");
+        return SCANNER.next();
+    }
+
+    /**
+     * Prompts user for an existing telephone number and reads it from stdin.
+     * @throws NoSuchElementException if no number was inputted and stdin is empty.
      * @return a correct telephone number.
      */
     @NotNull private static String readNumber() {
-        System.out.println("Enter phone number:");
+        System.out.println("Enter telephone number of entry in the phone book:");
         return SCANNER.next();
     }
 
     /**
-     * Prompts user for a phone book entry and reads it from stdin.
+     * Prompts user for a new telephone number and reads it from stdin.
+     * @throws NoSuchElementException if no number was inputted and stdin is empty.
+     * @return a correct telephone number.
+     */
+    @NotNull private static String readNewNumber() {
+        System.out.println("Enter new phone number:");
+        return SCANNER.next();
+    }
+
+    /**
+     * Prompts user for an existing phone book entry and reads it from stdin.
+     * @throws NoSuchElementException if no entry was inputted and stdin is empty.
      * @return a correct phone book entry.
      */
     @NotNull private static PhoneBookEntry readEntry() {
         return new PhoneBookEntry(readName(), readNumber());
     }
 
+    /**
+     * Prompts user for a new phone book entry and reads it from stdin.
+     * @throws NoSuchElementException if no entry was inputted and stdin is empty.
+     * @return a correct phone book entry.
+     */
+    @NotNull private static PhoneBookEntry readNewEntry() {
+        return new PhoneBookEntry(readNewName(), readNewNumber());
+    }
+
+    /**
+     * Prompts user for a command number and reads it from stdin.
+     * @throws NoSuchElementException if no command was inputted and stdin is empty.
+     * @return a string that is a command number.
+     */
+    @NotNull private static String readCommand() {
+        System.out.println("Enter command number:");
+        return SCANNER.next();
+    }
+
     /** main function that reads commands from stdin and executes them. */
-    public static void main(String[] args) {
-        outputCommands();
+    public static void main() {
+        printPossibleCommands();
         while (true) {
-            System.out.println("Enter command number:");
-            String command = SCANNER.next();
-            switch (command) {
-                case "0": {
-                    return;
-                } case "1": {
-                    addEntry();
-                    break;
-                } case "2": {
-                    findNumbersByName();
-                    break;
-                } case "3": {
-                    findNamesByNumber();
-                    break;
-                } case "4": {
-                    removeEntry();
-                    break;
-                } case "5": {
-                    changeName();
-                    break;
-                } case "6": {
-                    changeNumber();
-                    break;
-                } case "7": {
-                    printAllEntries();
-                    break;
-                } case "8": {
-                    outputCommands();
-                    break;
-                } default: {
-                    unknownCommand();
-                    break;
+            try {
+                switch (readCommand()) {
+                    case "0": {
+                        phonebook.clear();
+                        return;
+                    }
+                    case "1": {
+                        addEntry(readNewEntry());
+                        break;
+                    }
+                    case "2": {
+                        findNumbersByName(readName());
+                        break;
+                    }
+                    case "3": {
+                        findNamesByNumber(readNumber());
+                        break;
+                    }
+                    case "4": {
+                        removeEntry(readEntry());
+                        break;
+                    }
+                    case "5": {
+                        changeNameOfEntry(readEntry(), readNewName());
+                        break;
+                    }
+                    case "6": {
+                        changeNumberOfEntry(readEntry(), readNewNumber());
+                        break;
+                    }
+                    case "7": {
+                        printAllEntries();
+                        break;
+                    }
+                    case "8": {
+                        printPossibleCommands();
+                        break;
+                    }
+                    default: {
+                        unknownCommand();
+                        break;
+                    }
                 }
+            } catch (NoSuchElementException e) { //stdin is empty, need to exit
+                phonebook.clear();
+                return;
             }
         }
     }

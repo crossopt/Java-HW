@@ -17,10 +17,15 @@ class PhoneBookTest {
 
     @BeforeEach
     void setUp() {
-        phoneBook = new PhoneBook("testPhoneBook");
+        phoneBook = new PhoneBook();
         phoneBook.add(longNumber);
         phoneBook.add(oldGhostbusters);
         phoneBook.add(carRental);
+    }
+
+    @AfterEach
+    void tearDown() {
+        phoneBook.clear();
     }
     
     @Test

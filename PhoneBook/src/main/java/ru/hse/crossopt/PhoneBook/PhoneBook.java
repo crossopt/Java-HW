@@ -9,17 +9,15 @@ import java.util.List;
 
 /**  Implementation of a phone book using Morphia and MongoDB. */
 public class PhoneBook {
+    private static int objectID = 0; // field to get unique name for each instance of the class.
     @NotNull private final Datastore datastore;
 
-    /**
-     * Creates a new phone book with given name.
-     * @param phoneBookName the name of the phone book.
-     */
-    public PhoneBook(@NotNull String phoneBookName) {
+    /** Creates a new phone book. */
+    public PhoneBook() {
         Morphia morphia = new Morphia();
+        String phoneBookName = "PhoneBook" + Integer.valueOf(objectID++).toString();
         morphia.mapPackage("ru.hse.crossopt.PhoneBook");
         datastore = morphia.createDatastore(new MongoClient(), phoneBookName);
-        clear();
     }
 
     /**
