@@ -164,7 +164,7 @@ public class Main {
      * @throws NoSuchElementException if no number was inputted and stdin is empty.
      * @return a correct telephone number.
      */
-    @NotNull private static String readNumber() {
+    @NotNull private static String readNumber() throws NoSuchElementException {
         System.out.println("Enter telephone number of entry in the phone book:");
         return SCANNER.next();
     }
@@ -174,7 +174,7 @@ public class Main {
      * @throws NoSuchElementException if no number was inputted and stdin is empty.
      * @return a correct telephone number.
      */
-    @NotNull private static String readNewNumber() {
+    @NotNull private static String readNewNumber() throws NoSuchElementException {
         System.out.println("Enter new phone number:");
         return SCANNER.next();
     }
@@ -184,7 +184,7 @@ public class Main {
      * @throws NoSuchElementException if no entry was inputted and stdin is empty.
      * @return a correct phone book entry.
      */
-    @NotNull private static PhoneBookEntry readEntry() {
+    @NotNull private static PhoneBookEntry readEntry() throws NoSuchElementException {
         return new PhoneBookEntry(readName(), readNumber());
     }
 
@@ -193,7 +193,7 @@ public class Main {
      * @throws NoSuchElementException if no entry was inputted and stdin is empty.
      * @return a correct phone book entry.
      */
-    @NotNull private static PhoneBookEntry readNewEntry() {
+    @NotNull private static PhoneBookEntry readNewEntry() throws NoSuchElementException {
         return new PhoneBookEntry(readNewName(), readNewNumber());
     }
 
@@ -202,7 +202,7 @@ public class Main {
      * @throws NoSuchElementException if no command was inputted and stdin is empty.
      * @return a string that is a command number.
      */
-    @NotNull private static String readCommand() {
+    @NotNull private static String readCommand() throws NoSuchElementException {
         System.out.println("Enter command number:");
         return SCANNER.next();
     }
