@@ -216,40 +216,31 @@ public class Main {
                     case "0": {
                         phonebook.clear();
                         return;
-                    }
-                    case "1": {
+                    } case "1": {
                         addEntry(readNewEntry());
                         break;
-                    }
-                    case "2": {
+                    } case "2": {
                         findNumbersByName(readName());
                         break;
-                    }
-                    case "3": {
+                    } case "3": {
                         findNamesByNumber(readNumber());
                         break;
-                    }
-                    case "4": {
+                    } case "4": {
                         removeEntry(readEntry());
                         break;
-                    }
-                    case "5": {
+                    } case "5": {
                         changeNameOfEntry(readEntry(), readNewName());
                         break;
-                    }
-                    case "6": {
+                    } case "6": {
                         changeNumberOfEntry(readEntry(), readNewNumber());
                         break;
-                    }
-                    case "7": {
+                    } case "7": {
                         printAllEntries();
                         break;
-                    }
-                    case "8": {
+                    } case "8": {
                         printPossibleCommands();
                         break;
-                    }
-                    default: {
+                    } default: {
                         unknownCommand();
                         break;
                     }
