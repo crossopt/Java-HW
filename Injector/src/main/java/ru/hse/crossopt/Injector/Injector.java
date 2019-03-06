@@ -17,7 +17,7 @@ public class Injector {
         inProcessClasses = new HashSet<>();
         doneClasses = new HashMap<>();
         implementationClasses = new ArrayList<>();
-        for (var name : implementationClassNames) {
+        for (String name : implementationClassNames) {
             implementationClasses.add(Class.forName(name));
         }
 
@@ -52,9 +52,9 @@ public class Injector {
         Class<?>[] parameterTypes = constructor.getParameterTypes();
 
         List<Object> parameters = new ArrayList<>();
-        for (var parameterType: parameterTypes) {
+        for (Class<?> parameterType: parameterTypes) {
             Class<?> goodCandidate = null;
-            for (var candidate : implementationClasses) {
+            for (Class<?> candidate : implementationClasses) {
                 if (parameterType.isAssignableFrom(candidate)) {
                     if (goodCandidate == null) {
                         goodCandidate = candidate;
