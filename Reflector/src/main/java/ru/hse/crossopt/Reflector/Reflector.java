@@ -190,11 +190,7 @@ public class Reflector {
 
     private static void printListDifference(List<String> aList, List<String> bList, PrintStream output) {
         for (var aElement : aList) {
-            boolean wasFound = false;
-            for (var bElement : bList) {
-                wasFound = wasFound | aElement.equals(bElement);
-            }
-            if (!wasFound) {
+            if (!bList.contains(aElement)) {
                 output.println(aElement);
             }
         }
