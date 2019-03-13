@@ -35,6 +35,8 @@ public class Qsort {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new RuntimeException("Failed to sort list.");
+        } finally {
+            threadPool.shutDown();
         }
     }
 
