@@ -285,4 +285,36 @@ class HashMapTest {
         assertEquals("Dice", currentEntry.getValue());
         assertFalse(iterator.hasNext());
     }
+
+    @Test
+    void keySet_basicTest() {
+        assertEquals(3, hashMap.keySet().size());
+        var iterator = hashMap.keySet().iterator();
+        assertTrue(iterator.hasNext());
+        var currentEntry = iterator.next();
+        assertEquals("Pink", currentEntry);
+        assertTrue(iterator.hasNext());
+        currentEntry = iterator.next();
+        assertEquals("Rolling", currentEntry);
+        assertTrue(iterator.hasNext());
+        currentEntry = iterator.next();
+        assertEquals("Jefferson", currentEntry);
+        assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    void values_basicTest() {
+        assertEquals(3, hashMap.values().size());
+        var iterator = hashMap.values().iterator();
+        assertTrue(iterator.hasNext());
+        var currentEntry = iterator.next();
+        assertEquals("Floyd", currentEntry);
+        assertTrue(iterator.hasNext());
+        currentEntry = iterator.next();
+        assertEquals("Stones", currentEntry);
+        assertTrue(iterator.hasNext());
+        currentEntry = iterator.next();
+        assertEquals("Airplane", currentEntry);
+        assertFalse(iterator.hasNext());
+    }
 }

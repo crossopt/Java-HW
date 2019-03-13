@@ -10,6 +10,7 @@ import java.util.*;
 /**
  * Linked HashMap class that can iterate in order of the elements' addition and do most everything a map does as well.
  * Time complexity of iteration is O(1) amortized.
+ *
  * @param <K> key parameter.
  * @param <V> value parameter.
  */
@@ -29,6 +30,7 @@ public class HashMap<K, V> implements Map<K, V> {
 
     /**
      * hash function used within the HashMap to determine correct bucket for key.
+     *
      * @return The hash, an integer from 0 to capacity.
      */
     private int getHash(@NotNull Object key) {
@@ -40,12 +42,12 @@ public class HashMap<K, V> implements Map<K, V> {
         List<K, V>[] oldData = buckets;
         capacity *= LOAD_FACTOR;
         size = 0;
-        buckets = (List<K, V>[])(new List[capacity]);
+        buckets = (List<K, V>[]) (new List[capacity]);
         Arrays.setAll(buckets, ind -> new List());
         order = new List<>();
 
         for (var bucket : oldData) {
-            for (var key = (K)bucket.anyKey(); key != null; key = bucket.anyKey()) {
+            for (var key = (K) bucket.anyKey(); key != null; key = bucket.anyKey()) {
                 V value = bucket.remove(key);
                 put(key, Objects.requireNonNull(value));
             }
@@ -54,6 +56,7 @@ public class HashMap<K, V> implements Map<K, V> {
 
     /**
      * Gets size of HashMap.
+     *
      * @return amount of elements in the HashMap.
      */
     public int size() {
@@ -61,25 +64,28 @@ public class HashMap<K, V> implements Map<K, V> {
     }
 
     /**
-     *  Checks if given key is in the HashMap.
+     * Checks if given key is in the HashMap.
+     *
      * @return true if the given key is in the HashMap, false otherwise
      */
     @SuppressWarnings("unchecked") // key should be of type k.
     public boolean contains(@NotNull Object key) {
-        return buckets[getHash(key)].contains((K)key);
+        return buckets[getHash(key)].contains((K) key);
     }
 
     /**
      * Returns a value from the HashMap with given key.
+     *
      * @return Value string with given key or null if none exist.
      */
     @SuppressWarnings("unchecked") // key should be of type k.
     public @Nullable V get(@NotNull Object key) {
-        return buckets[getHash(key)].get((K)key);
+        return buckets[getHash(key)].get((K) key);
     }
 
     /**
      * Puts node with given key and non-null value in HashMap.
+     *
      * @return Previous value with given key if it exists or null otherwise.
      */
     public @Nullable V put(@NotNull K key, @NotNull V value) {
@@ -95,6 +101,7 @@ public class HashMap<K, V> implements Map<K, V> {
 
     /**
      * Removes node with given key from HashMap.
+     *
      * @return Value of removed node or null if it did not exist.
      */
     @SuppressWarnings("unchecked") // key should be of type k.
@@ -102,7 +109,7 @@ public class HashMap<K, V> implements Map<K, V> {
         if (contains(key)) {
             size--;
         }
-        return buckets[getHash(key)].remove((K)key);
+        return buckets[getHash(key)].remove((K) key);
     }
 
     /**
@@ -112,7 +119,7 @@ public class HashMap<K, V> implements Map<K, V> {
     public void clear() {
         size = 0;
         capacity = INITIAL_CAPACITY;
-        buckets = (List<K, V>[])(new List[capacity]);
+        buckets = (List<K, V>[]) (new List[capacity]);
         Arrays.setAll(buckets, ind -> new List());
         order = new List<>();
     }
@@ -120,6 +127,7 @@ public class HashMap<K, V> implements Map<K, V> {
 
     /**
      * Returns false if HashMap is empty or true otherwise.
+     *
      * @return false if HashMap is empty or true otherwise.
      */
     @Override
@@ -129,6 +137,7 @@ public class HashMap<K, V> implements Map<K, V> {
 
     /**
      * Returns true if key is in HashMap or false otherwise.
+     *
      * @param key a key to check.
      * @return true if key is in HashMap or false otherwise.
      */
@@ -139,6 +148,7 @@ public class HashMap<K, V> implements Map<K, V> {
 
     /**
      * Adds all elements from map to the HashMap.
+     *
      * @param map a map to add all elements from.
      */
     @Override
@@ -150,6 +160,7 @@ public class HashMap<K, V> implements Map<K, V> {
 
     /**
      * Checks if given value is in the HashMap.
+     *
      * @param value a value to check.
      * @return true if value is in HashMap, false otherwise.
      */
@@ -165,19 +176,22 @@ public class HashMap<K, V> implements Map<K, V> {
         return false;
     }
 
+    /** Returns set view of keys in HashMap. */
     @Override
     public @NotNull Set<K> keySet() {
-        return null;
+        return new KeySet();
     }
 
+    /** Returns collection view of values in HashMap. */
     @Override
     public @NotNull Collection<V> values() {
-        return null;
+        return new ValueCollection();
     }
 
     /**
      * Returns a Set view of the mappings contained in the HashMap.
      * Only size and iterator work.
+     *
      * @return a Set view of the mappings contained in the HashMap.
      */
     @Override
@@ -185,10 +199,40 @@ public class HashMap<K, V> implements Map<K, V> {
         return new EntrySet();
     }
 
+    /** Class for set of keys of the HashMap. Is synchronized with HashMap. */
+    class KeySet extends AbstractSet<K> {
+        /** Returns iterator over all keys. */
+        @Override
+        public @NotNull Iterator<K> iterator() {
+            return new HashMapKeyIterator();
+        }
+        /** Returns size of KeySet. */
+        @Override
+        public int size() {
+            return size;
+        }
+    }
+
+    /** Class for collection of values of the HashMap. Is synchronized with HashMap. */
+    class ValueCollection extends AbstractCollection<V> {
+        /** Returns iterator over all values. */
+        @Override
+        public Iterator<V> iterator() {
+            return new HashMapValueIterator();
+        }
+
+        /** Returns size of ValueCollection. */
+        @Override
+        public int size() {
+            return size;
+        }
+    }
+
     /** Class for set of entries of the HashMap. Is synchronized with HashMap. */
     class EntrySet extends AbstractSet<Entry<K, V>> {
         /**
          * Returns iterator over the EntrySet. If HashMap is modified iterator will reflect the changes.
+         *
          * @return an iterator.
          */
         @Override
@@ -227,6 +271,7 @@ public class HashMap<K, V> implements Map<K, V> {
 
         /**
          * Setter for entry value.
+         *
          * @param value a value to set to the current entry.
          * @return the previous value.
          */
@@ -242,11 +287,12 @@ public class HashMap<K, V> implements Map<K, V> {
      * Iterator over the HashMap.
      * Because removing from list is lazy the time complexity of next() operation is amortized.
      */
-    private class HashMapIterator implements Iterator<Entry <K, V>> {
+    private class HashMapIterator implements Iterator<Entry<K, V>> {
         @Nullable List<K, V>.Node currentNode = order.getHead().getNext();
 
         /**
          * Checks whether the iterator has next element.
+         *
          * @return true if iterator has next element, false otherwise.
          */
         @Override
@@ -256,6 +302,7 @@ public class HashMap<K, V> implements Map<K, V> {
 
         /**
          * Returns the next element in iteration order.
+         *
          * @return the next element.
          */
         @Override
@@ -267,6 +314,62 @@ public class HashMap<K, V> implements Map<K, V> {
             }
 
             return result;
+        }
+    }
+
+    /**
+     * Iterator over the HashMap keys.
+     * Because removing from list is lazy the time complexity of next() operation is amortized.
+     */
+    private class HashMapKeyIterator implements Iterator<K> {
+        private HashMapIterator underlying = new HashMapIterator();
+
+        /**
+         * Checks whether the iterator has next element.
+         *
+         * @return true if iterator has next element, false otherwise.
+         */
+        @Override
+        public boolean hasNext() {
+            return underlying.hasNext();
+        }
+
+        /**
+         * Returns the next key in iteration order.
+         *
+         * @return the next key.
+         */
+        @Override
+        public K next() {
+            return underlying.next().getKey();
+        }
+    }
+
+    /**
+     * Iterator over the HashMap values.
+     * Because removing from list is lazy the time complexity of next() operation is amortized.
+     */
+    private class HashMapValueIterator implements Iterator<V> {
+        private HashMapIterator underlying = new HashMapIterator();
+
+        /**
+         * Checks whether the iterator has next element.
+         *
+         * @return true if iterator has next element, false otherwise.
+         */
+        @Override
+        public boolean hasNext() {
+            return underlying.hasNext();
+        }
+
+        /**
+         * Returns the next value in iteration order.
+         *
+         * @return the next value.
+         */
+        @Override
+        public V next() {
+            return underlying.next().getValue();
         }
     }
 }
