@@ -99,15 +99,18 @@ class ReflectorTest {
         var output = new ByteArrayOutputStream();
         var printStream = new PrintStream(output);
         assertDoesNotThrow(() -> Reflector.diffClasses(NotSimpleClass.class, AlsoNotSimpleClass.class, printStream));
-        var result = output.toString().trim().split(System.lineSeparator());
+        var result = output.toString();
 
-        assertEquals(2, result.length);
-        if (result[0].length() < result[1].length()) {
-            assertEquals("java.lang.Class<? extends T> f3() throws IllegalAccessError", result[0]);
-            assertEquals(" java.lang.Class<? extends T> method1() throws IllegalAccessError, LayerInstantiationException", result[1]);
-        } else {
-            assertEquals("java.lang.Class<? extends T> method1() throws IllegalAccessError, LayerInstantiationException", result[0]);
-            assertEquals(" java.lang.Class<? extends T> f3() throws IllegalAccessError", result[1]);
-        }
+        var possibleOutput1 = new ByteArrayOutputStream();
+        var possibleResult1 = new PrintStream(possibleOutput1);
+        possibleResult1.println(" java.lang.Class<? extends T> f3() throws IllegalAccessError");
+        possibleResult1.println(" java.lang.Class<? extends T> method1() throws IllegalAccessError, LayerInstantiationException");
+
+        var possibleOutput2 = new ByteArrayOutputStream();
+        var possibleResult2 = new PrintStream(possibleOutput2);
+        possibleResult2.println(" java.lang.Class<? extends T> method1() throws IllegalAccessError, LayerInstantiationException");
+        possibleResult2.println(" java.lang.Class<? extends T> f3() throws IllegalAccessError");
+
+        assertTrue(result.equals(possibleOutput1.toString()) || result.equals(possibleOutput2.toString()));
     }
 }
