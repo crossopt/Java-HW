@@ -99,7 +99,7 @@ class ReflectorTest {
         var output = new ByteArrayOutputStream();
         var printStream = new PrintStream(output);
         assertDoesNotThrow(() -> Reflector.diffClasses(NotSimpleClass.class, AlsoNotSimpleClass.class, printStream));
-        var result = output.toString().trim().split("\n");
+        var result = output.toString().trim().split(System.lineSeparator());
 
         assertEquals(2, result.length);
         if (result[0].length() < result[1].length()) {
