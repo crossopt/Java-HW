@@ -1,0 +1,90 @@
+Format is:
+0: exit program
+1: add entry
+2: find phone numbers by name
+3: find names by phone number
+4: remove entry
+5: change name for entry
+6: change phone number for entry
+7: print all entries
+8: print help
+Enter command number:
+Enter new name:
+Enter new phone number:
+Entry added successfully!
+Enter command number:
+Enter new name:
+Enter new phone number:
+Entry added successfully!
+Enter command number:
+Enter new name:
+Enter new phone number:
+Entry added successfully!
+Enter command number:
+name: Vasya number: 179
+name: Petya number: 229
+name: Petya number: 179
+Enter command number:
+Enter name of entry in the phone book:
+229
+179
+Enter command number:
+Enter name of entry in the phone book:
+There are no entries with this name in the phone book.
+Enter command number:
+Enter telephone number of entry in the phone book:
+Vasya
+Petya
+Enter command number:
+Enter telephone number of entry in the phone book:
+There are no entries with this number in the phone book.
+Enter command number:
+Enter new name:
+Enter new phone number:
+Entry already exists in the phone book.
+Enter command number:
+Enter name of entry in the phone book:
+Enter telephone number of entry in the phone book:
+Entry removed successfully!
+Enter command number:
+Enter name of entry in the phone book:
+Enter telephone number of entry in the phone book:
+Entry does not exist in the phone book.
+Enter command number:
+Enter name of entry in the phone book:
+Enter telephone number of entry in the phone book:
+Enter new name:
+Entry does not exist in the phone book.
+Enter command number:
+Command should be number from 0 to 8.
+Enter 8 for a list of commands.
+Enter command number:
+Command should be number from 0 to 8.
+Enter 8 for a list of commands.
+Enter command number:
+Enter name of entry in the phone book:
+Enter telephone number of entry in the phone book:
+Enter new name:
+Entry name changed successfully!
+Enter command number:
+Enter name of entry in the phone book:
+Enter telephone number of entry in the phone book:
+Enter new phone number:
+Entry number changed successfully!
+Enter command number:
+Command should be number from 0 to 8.
+Enter 8 for a list of commands.
+Enter command number:
+Format is:
+0: exit program
+1: add entry
+2: find phone numbers by name
+3: find names by phone number
+4: remove entry
+5: change name for entry
+6: change phone number for entry
+7: print all entries
+8: print help
+Enter command number:
+Enter new name:
+Enter new phone number:
