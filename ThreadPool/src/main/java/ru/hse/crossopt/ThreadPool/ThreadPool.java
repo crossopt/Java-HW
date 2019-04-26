@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 public class ThreadPool<T> {
     private final @NotNull Thread[] threads;
     private final @NotNull LinkedList<ThreadPoolTask> taskQueue;
+    private volatile boolean wasShutdown = false;
 
     /**
      * Creates a thread pool with the given number of threads.
@@ -25,7 +26,7 @@ public class ThreadPool<T> {
         taskQueue = new LinkedList<>();
         for (int i = 0; i < threadAmount; i++) {
             threads[i] = new Thread(() -> {
-                while (!Thread.interrupted()) {
+                while (!wasShutdown) {
                     ThreadPoolTask currentTask = null;
                     if (!taskQueue.isEmpty()) {
                         synchronized (taskQueue) {
@@ -35,15 +36,7 @@ public class ThreadPool<T> {
                         }
                     }
                     if (currentTask != null) {
-                        synchronized (currentTask.supplier) {
-                            try {
-                                currentTask.result = currentTask.supplier.get();
-                            } catch (Exception exception) {
-                                currentTask.exception = exception;
-                            }
-                            currentTask.ready = true;
-                            currentTask.supplier.notifyAll();
-                        }
+                        currentTask.execute();
                     }
                 }
             });
@@ -53,6 +46,7 @@ public class ThreadPool<T> {
 
     /** Interrupts all threads in pool. */
     public void shutdown() {
+        wasShutdown = true;
         for (var thread : threads) {
             thread.interrupt();
         }
@@ -108,6 +102,19 @@ public class ThreadPool<T> {
                 throw new LightExecutionException(exception);
             }
             return result;
+        }
+
+        /** Executes the task by getting the result from the supplier. */
+        private void execute() {
+            try {
+                result = supplier.get();
+            } catch (Exception exception) {
+                this.exception = exception;
+            }
+            ready = true;
+            synchronized (supplier) {
+                supplier.notifyAll();
+            }
         }
 
         /**
