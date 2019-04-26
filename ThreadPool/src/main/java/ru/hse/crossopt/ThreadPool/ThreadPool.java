@@ -97,7 +97,7 @@ public class ThreadPool<T> {
                         try {
                             supplier.wait();
                         } catch (InterruptedException exception) {
-                            throw new LightExecutionException("Interrupted calculation: " + exception.getMessage());
+                            throw new LightExecutionException(exception);
                         }
                     }
                 }

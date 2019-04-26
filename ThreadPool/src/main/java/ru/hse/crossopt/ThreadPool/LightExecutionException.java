@@ -6,9 +6,4 @@ public class LightExecutionException extends Exception {
     public LightExecutionException(Exception exception) {
         super(exception);
     }
-
-    /** Constructor that creates LightExecutionException from a given message. */
-    public LightExecutionException(String message) {
-        super(message);
-    }
 }
