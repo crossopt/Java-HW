@@ -19,5 +19,5 @@ public interface LightFuture<T> {
      * @param function a function to apply to the result of this task.
      * @return a new LightFuture task.
      */
-    LightFuture<T> thenApply(Function<T, T> function);
+    <R> LightFuture<R> thenApply(Function<? super T, R> function);
 }

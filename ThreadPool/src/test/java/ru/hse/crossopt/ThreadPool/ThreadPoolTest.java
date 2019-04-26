@@ -2,7 +2,6 @@ package ru.hse.crossopt.ThreadPool;
 
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Field;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,13 +9,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class ThreadPoolTest {
     @Test
     void testBadThreadAmount() {
-        assertThrows(IllegalArgumentException.class, () -> new ThreadPool<Integer>(0));
-        assertThrows(IllegalArgumentException.class, () -> new ThreadPool<String>(-7));
+        assertThrows(IllegalArgumentException.class, () -> new ThreadPool(0));
+        assertThrows(IllegalArgumentException.class, () -> new ThreadPool(-7));
     }
 
     @Test
     void testOneThreadSimpleTasksPrimitiveTypes() throws LightExecutionException {
-        ThreadPool<Integer> pool = new ThreadPool<>(1);
+        var pool = new ThreadPool(1);
         LightFuture<Integer> sumTask = pool.add(() -> 1 + 1);
         LightFuture<Integer> multiplyTask = pool.add(() -> 2 * 2);
         assertEquals(Integer.valueOf(2), sumTask.get());
@@ -25,7 +24,7 @@ class ThreadPoolTest {
 
     @Test
     void testManyThreadsSimpleTasksPrimitiveTypes() throws LightExecutionException {
-        ThreadPool<Integer> pool = new ThreadPool<>(10);
+        var pool = new ThreadPool(10);
         LightFuture<Integer> sumTask = pool.add(() -> 1 + 1);
         LightFuture<Integer> multiplyTask = pool.add(() -> 2 * 2);
         assertEquals(Integer.valueOf(2), sumTask.get());
@@ -34,7 +33,7 @@ class ThreadPoolTest {
 
     @Test
     void testOneThreadSimpleTasksNonPrimitiveTypesMultipleCalls() throws LightExecutionException {
-        ThreadPool<String> pool = new ThreadPool<>(1);
+        var pool = new ThreadPool(1);
         LightFuture<String> sumTask = pool.add(() -> Integer.valueOf(1 + 1).toString());
         LightFuture<String> multiplyTask = pool.add(() -> Integer.valueOf(2 * 2).toString());
         assertEquals("2", sumTask.get());
@@ -48,7 +47,7 @@ class ThreadPoolTest {
 
     @Test
     void testManyThreadsSimpleTasksNonPrimitiveTypesMultipleCalls() throws LightExecutionException {
-        ThreadPool<String> pool = new ThreadPool<>(10);
+        var pool = new ThreadPool(10);
         LightFuture<String> sumTask = pool.add(() -> Integer.valueOf(1 + 1).toString());
         LightFuture<String> multiplyTask = pool.add(() -> Integer.valueOf(2 * 2).toString());
         assertEquals("2", sumTask.get());
@@ -62,7 +61,7 @@ class ThreadPoolTest {
 
     @Test
     void testOneThreadException() {
-        ThreadPool<String> pool = new ThreadPool<>(1);
+        var pool = new ThreadPool(1);
         LightFuture<String> badTask = pool.add(() -> {
             throw new RuntimeException();
         });
@@ -72,7 +71,7 @@ class ThreadPoolTest {
 
     @Test
     void testManyThreadsException() {
-        ThreadPool<String> pool = new ThreadPool<>(15);
+        var pool = new ThreadPool(15);
         for (int i = 0; i < 20; i++) {
             pool.add(() -> "good task");
         }
@@ -85,7 +84,7 @@ class ThreadPoolTest {
 
     @Test
     void testOneThreadExceptionInThenApply() {
-        ThreadPool<String> pool = new ThreadPool<>(1);
+        var pool = new ThreadPool(1);
         for (int i = 0; i < 20; i++) {
             pool.add(() -> "good task");
         }
@@ -97,7 +96,7 @@ class ThreadPoolTest {
 
     @Test
     void testManyThreadsExceptionInThenApply() {
-        ThreadPool<String> pool = new ThreadPool<>(15);
+        var pool = new ThreadPool(15);
         LightFuture<String> firstTask = pool.add(() -> null);
         LightFuture<String> badTask = firstTask.thenApply(String::toLowerCase);
         assertThrows(LightExecutionException.class, badTask::get);
@@ -107,7 +106,7 @@ class ThreadPoolTest {
     @Test
     @SuppressWarnings("InfiniteLoopStatement")
     void testOneThreadIsReady() throws LightExecutionException {
-        ThreadPool<String> pool = new ThreadPool<>(1);
+        var pool = new ThreadPool(1);
         LightFuture<String> firstTask = pool.add(() -> "task is ready");
         assertEquals("task is ready", firstTask.get());
         assertTrue(firstTask.isReady());
@@ -122,7 +121,7 @@ class ThreadPoolTest {
     @Test
     @SuppressWarnings("InfiniteLoopStatement")
     void testManyThreadsIsReady() throws LightExecutionException {
-        ThreadPool<String> pool = new ThreadPool<>(10);
+        var pool = new ThreadPool(10);
         LightFuture<String> firstTask = pool.add(() -> "task is ready");
         assertEquals("task is ready", firstTask.get());
         assertTrue(firstTask.isReady());
@@ -136,12 +135,11 @@ class ThreadPoolTest {
 
     @Test
     void testCorrectAmountInPoolOneThread() throws NoSuchFieldException, IllegalAccessException {
-        ThreadPool<Double> pool = new ThreadPool<>(1);
-
+        var pool = new ThreadPool(1);
         for (int i = 0; i < 4; i++) {
             pool.add(() -> 3.14);
         }
-        Field threads = pool.getClass().getDeclaredField("threads");
+        var threads = pool.getClass().getDeclaredField("threads");
         threads.setAccessible(true);
         int threadsAlive = 0;
         for (var thread : (Thread[]) threads.get(pool)) {
@@ -154,7 +152,7 @@ class ThreadPoolTest {
 
     @Test
     void testCorrectAmountInPoolManyThreads() throws NoSuchFieldException, IllegalAccessException {
-        ThreadPool<Double> pool = new ThreadPool<>(10);
+        var pool = new ThreadPool(10);
         for (int i = 0; i < 8; i++) {
             pool.add(() -> {
                 double x = 0.0;
@@ -164,7 +162,7 @@ class ThreadPoolTest {
                 return x;
             });
         }
-        Field threads = pool.getClass().getDeclaredField("threads");
+        var threads = pool.getClass().getDeclaredField("threads");
         threads.setAccessible(true);
         int threadsAlive = 0;
         for (var thread : (Thread[]) threads.get(pool)) {
@@ -177,12 +175,11 @@ class ThreadPoolTest {
 
     @Test
     void testShutdownOneThreadDoesEndTasks() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
-        ThreadPool<Double> pool = new ThreadPool<>(1);
-
+        var pool = new ThreadPool(1);
         for (int i = 0; i < 3; i++) {
             pool.add(() -> 0.0);
         }
-        Field threads = pool.getClass().getDeclaredField("threads");
+        var threads = pool.getClass().getDeclaredField("threads");
         threads.setAccessible(true);
         pool.shutdown();
         Thread.sleep(5000);
@@ -193,12 +190,11 @@ class ThreadPoolTest {
 
     @Test
     void testShutdownManyThreadsDoesEndTasks() throws NoSuchFieldException, InterruptedException, IllegalAccessException {
-        ThreadPool<Double> pool = new ThreadPool<>(3);
-
+        var pool = new ThreadPool(3);
         for (int i = 0; i < 3; i++) {
             pool.add(() -> 1.0);
         }
-        Field threads = pool.getClass().getDeclaredField("threads");
+        var threads = pool.getClass().getDeclaredField("threads");
         threads.setAccessible(true);
         pool.shutdown();
         Thread.sleep(5000);
@@ -209,7 +205,7 @@ class ThreadPoolTest {
 
     @Test
     void testShutdownOneThreadDoesntWorkNewTask() throws InterruptedException {
-        ThreadPool<String> pool = new ThreadPool<>(1);
+        var pool = new ThreadPool(1);
         for (int i = 0; i < 5; i++) {
             pool.add(() -> "2");
         }
@@ -220,7 +216,7 @@ class ThreadPoolTest {
 
     @Test
     void testShutdownManyThreadsDoesntWorkNewTask() throws InterruptedException {
-        ThreadPool<String> pool = new ThreadPool<>(7);
+        var pool = new ThreadPool(7);
         for (int i = 0; i < 2; i++) {
             pool.add(() -> "1.0");
         }
@@ -232,7 +228,7 @@ class ThreadPoolTest {
     @Test
     @SuppressWarnings("unchecked")
     void testThenApplyOneThreadSimple() throws LightExecutionException {
-        ThreadPool<Integer> pool = new ThreadPool<>(1);
+        var pool = new ThreadPool(1);
         LightFuture<Integer> firstTask = pool.add(() -> 2);
         LightFuture<Integer>[] dependentTasks = new LightFuture[10];
         for (int i = 0; i < 10; i++) {
@@ -248,7 +244,7 @@ class ThreadPoolTest {
     @Test
     @SuppressWarnings("unchecked")
     void testThenApplyManyThreadsSimple() throws LightExecutionException {
-        ThreadPool<Integer> pool = new ThreadPool<>(1);
+        var pool = new ThreadPool(1);
         LightFuture<Integer> firstTask = pool.add(() -> 2);
         LightFuture<Integer>[] dependentTasks = new LightFuture[10];
         for (int i = 0; i < 10; i++) {
@@ -264,7 +260,7 @@ class ThreadPoolTest {
     @Test
     @SuppressWarnings("unchecked")
     void testThenApplyOneThreadConsecutive() throws LightExecutionException {
-        ThreadPool<Integer> pool = new ThreadPool<>(1);
+        var pool = new ThreadPool(1);
         LightFuture<Integer>[] dependentTasks = new LightFuture[10];
         dependentTasks[0] = pool.add(() -> 1);
         for (int i = 1; i < 10; i++) {
@@ -278,7 +274,7 @@ class ThreadPoolTest {
     @Test
     @SuppressWarnings("unchecked")
     void testThenApplyManyThreadsConsecutive() throws LightExecutionException {
-        ThreadPool<Integer> pool = new ThreadPool<>(15);
+        var pool = new ThreadPool(15);
         LightFuture<Integer>[] dependentTasks = new LightFuture[10];
         dependentTasks[0] = pool.add(() -> 1);
         for (int i = 1; i < 10; i++) {
@@ -291,8 +287,8 @@ class ThreadPoolTest {
 
     @Test
     void testOneThreadSupplierWithDifferingValues() throws LightExecutionException {
-        Random random = new Random(179);
-        ThreadPool<Integer> pool = new ThreadPool<>(1);
+        var random = new Random(179);
+        var pool = new ThreadPool(1);
         LightFuture<Integer> sumTask = pool.add(random::nextInt);
         Integer result = sumTask.get();
         for (int i = 0; i < 10; i++) {
@@ -302,8 +298,8 @@ class ThreadPoolTest {
 
     @Test
     void testManyThreadsSupplierWithDifferingValues() throws LightExecutionException {
-        Random random = new Random(179);
-        ThreadPool<Integer> pool = new ThreadPool<>(15);
+        var random = new Random(179);
+        var pool = new ThreadPool(15);
         LightFuture<Integer> sumTask = pool.add(random::nextInt);
         Integer result = sumTask.get();
         for (int i = 0; i < 25; i++) {
@@ -313,7 +309,7 @@ class ThreadPoolTest {
 
     @Test
     void testOneThreadThenApplyForFailedTask() {
-        ThreadPool<String> pool = new ThreadPool<>(1);
+        var pool = new ThreadPool(1);
         LightFuture<String> badTask = pool.add(() -> {
             throw new RuntimeException();
         });
@@ -324,7 +320,7 @@ class ThreadPoolTest {
 
     @Test
     void testManyThreadsThenApplyForFailedTask() {
-        ThreadPool<String> pool = new ThreadPool<>(5);
+        var pool = new ThreadPool(5);
         LightFuture<String> badTask = pool.add(() -> {
             throw new RuntimeException();
         });
@@ -336,7 +332,7 @@ class ThreadPoolTest {
 
     @Test
     void testOneThreadThenApplyAfterGetCalculated() throws LightExecutionException {
-        ThreadPool<String> pool = new ThreadPool<>(1);
+        var pool = new ThreadPool(1);
         LightFuture<String> task = pool.add(() -> "0");
         assertEquals("0", task.get());
         LightFuture<String> secondTask = task.thenApply(x -> x + "!");
@@ -349,7 +345,7 @@ class ThreadPoolTest {
 
     @Test
     void testManyThreadsThenApplyAfterGetCalculated() throws LightExecutionException {
-        ThreadPool<String> pool = new ThreadPool<>(5);
+        var pool = new ThreadPool(5);
         LightFuture<String> task = pool.add(() -> "0");
         assertEquals("0", task.get());
         LightFuture<String> secondTask = task.thenApply(x -> x + "!");
@@ -362,7 +358,7 @@ class ThreadPoolTest {
 
     @Test
     void testOneThreadLongTaskWithThenApply() throws LightExecutionException {
-        ThreadPool<String> pool = new ThreadPool<>(1);
+        var pool = new ThreadPool(1);
         LightFuture<String> task = pool.add(() -> {
             try {
                 Thread.sleep(2000);
@@ -382,7 +378,7 @@ class ThreadPoolTest {
 
     @Test
     void testManyThreadsLongTaskWithThenApply() throws LightExecutionException {
-        ThreadPool<String> pool = new ThreadPool<>(15);
+        var pool = new ThreadPool(15);
         LightFuture<String> task = pool.add(() -> {
             try {
                 Thread.sleep(2000);
@@ -398,5 +394,16 @@ class ThreadPoolTest {
         assertEquals("0!", secondTask.get());
         assertEquals("0?", thirdTask.get());
         assertEquals("0...", fourthTask.get());
+    }
+
+    @Test
+    void testThenApplyDifferentTypeFunctions() throws LightExecutionException {
+        var pool = new ThreadPool(5);
+        LightFuture<Integer> task = pool.add(() -> 0);
+        LightFuture<String> secondTask = task.thenApply(x -> Integer.valueOf(x + 1).toString());
+        LightFuture<String> thirdTask = task.thenApply(Object::toString);
+        assertEquals(Integer.valueOf(0), task.get());
+        assertEquals("1", secondTask.get());
+        assertEquals("0", thirdTask.get());
     }
 }

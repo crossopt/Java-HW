@@ -10,9 +10,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /** Thread pool class with fixed number of threads. */
-public class ThreadPool<T> {
+public class ThreadPool {
     private final @NotNull Thread[] threads;
-    private final @NotNull LinkedList<ThreadPoolTask> taskQueue;
+    private final @NotNull LinkedList<ThreadPoolTask<?>> taskQueue;
     private volatile boolean wasShutdown = false;
 
     /**
@@ -60,14 +60,14 @@ public class ThreadPool<T> {
      * @throws IllegalStateException if ThreadPool was shut down.
      * @return the created task.
      */
-    @NotNull public LightFuture<T> add(@NotNull Supplier<T> supplier) {
-        var task = new ThreadPoolTask(supplier);
+    @NotNull public <T> LightFuture<T> add(@NotNull Supplier<T> supplier) {
+        var task = new ThreadPoolTask<>(supplier);
         task.submit();
         return task;
     }
 
     /** Class that stores tasks for this ThreadPool. */
-    private class ThreadPoolTask implements LightFuture<T> {
+    private class ThreadPoolTask<T> implements LightFuture<T> {
         private final @NotNull Supplier<T> supplier;
         private volatile boolean ready = false;
         private @Nullable T result = null;
@@ -142,8 +142,8 @@ public class ThreadPool<T> {
          * @return a new LightFuture task.
          */
         @Override
-        @NotNull public LightFuture<T> thenApply(@NotNull Function<T, T> function) {
-            var task = new ThreadPoolTask(() -> {
+        @NotNull public <R> LightFuture<R> thenApply(@NotNull Function<? super T, R> function) {
+            var task = new ThreadPoolTask<>(() -> {
                 try {
                     return function.apply(ThreadPoolTask.this.get());
                 } catch (LightExecutionException exception) {
