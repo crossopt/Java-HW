@@ -333,4 +333,70 @@ class ThreadPoolTest {
         assertThrows(LightExecutionException.class, secondBadTask::get);
         assertThrows(LightExecutionException.class, secondBadTask::get);
     }
+
+    @Test
+    void testOneThreadThenApplyAfterGetCalculated() throws LightExecutionException {
+        ThreadPool<String> pool = new ThreadPool<>(1);
+        LightFuture<String> task = pool.add(() -> "0");
+        assertEquals("0", task.get());
+        LightFuture<String> secondTask = task.thenApply(x -> x + "!");
+        LightFuture<String> thirdTask = task.thenApply(x -> x + "?");
+        LightFuture<String> fourthTask = task.thenApply(x -> x + "...");
+        assertEquals("0!", secondTask.get());
+        assertEquals("0?", thirdTask.get());
+        assertEquals("0...", fourthTask.get());
+    }
+
+    @Test
+    void testManyThreadsThenApplyAfterGetCalculated() throws LightExecutionException {
+        ThreadPool<String> pool = new ThreadPool<>(5);
+        LightFuture<String> task = pool.add(() -> "0");
+        assertEquals("0", task.get());
+        LightFuture<String> secondTask = task.thenApply(x -> x + "!");
+        LightFuture<String> thirdTask = task.thenApply(x -> x + "?");
+        LightFuture<String> fourthTask = task.thenApply(x -> x + "...");
+        assertEquals("0!", secondTask.get());
+        assertEquals("0?", thirdTask.get());
+        assertEquals("0...", fourthTask.get());
+    }
+
+    @Test
+    void testOneThreadLongTaskWithThenApply() throws LightExecutionException {
+        ThreadPool<String> pool = new ThreadPool<>(1);
+        LightFuture<String> task = pool.add(() -> {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                return "1";
+            }
+            return "0";
+        });
+        assertEquals("0", task.get());
+        LightFuture<String> secondTask = task.thenApply(x -> x + "!");
+        LightFuture<String> thirdTask = task.thenApply(x -> x + "?");
+        LightFuture<String> fourthTask = task.thenApply(x -> x + "...");
+        assertEquals("0!", secondTask.get());
+        assertEquals("0?", thirdTask.get());
+        assertEquals("0...", fourthTask.get());
+    }
+
+    @Test
+    void testManyThreadsLongTaskWithThenApply() throws LightExecutionException {
+        ThreadPool<String> pool = new ThreadPool<>(15);
+        LightFuture<String> task = pool.add(() -> {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                return "1";
+            }
+            return "0";
+        });
+        assertEquals("0", task.get());
+        LightFuture<String> secondTask = task.thenApply(x -> x + "!");
+        LightFuture<String> thirdTask = task.thenApply(x -> x + "?");
+        LightFuture<String> fourthTask = task.thenApply(x -> x + "...");
+        assertEquals("0!", secondTask.get());
+        assertEquals("0?", thirdTask.get());
+        assertEquals("0...", fourthTask.get());
+    }
 }
