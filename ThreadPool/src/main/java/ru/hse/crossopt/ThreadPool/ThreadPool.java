@@ -71,7 +71,7 @@ public class ThreadPool<T> {
     /** Class that stores tasks for this ThreadPool. */
     private class ThreadPoolTask implements LightFuture<T> {
         private final @NotNull Supplier<T> supplier;
-        private boolean ready = false;
+        private volatile boolean ready = false;
         private @Nullable T result = null;
         private @Nullable Exception exception = null;
 
@@ -107,7 +107,7 @@ public class ThreadPool<T> {
             return result;
         }
 
-        /** Executes the task by getting the result from the supplier. */
+        /** Executes the task by getting the result from the supplier, is run once. */
         private void execute() {
             try {
                 result = supplier.get();
