@@ -3,7 +3,9 @@ package ru.hse.crossopt.ThreadPool;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -44,7 +46,7 @@ public class ThreadPool<T> {
         }
     }
 
-    /** Interrupts all threads in pool. */
+    /** Shuts down ThreadPool and interrupts all threads in it. */
     public void shutdown() {
         wasShutdown = true;
         for (var thread : threads) {
@@ -55,16 +57,12 @@ public class ThreadPool<T> {
     /**
      * Creates a task from the given supplier and adds it to pool queue for processing.
      * @param supplier a supplier for the task creation.
+     * @throws IllegalStateException if ThreadPool was shut down.
      * @return the created task.
      */
     @NotNull public LightFuture<T> add(@NotNull Supplier<T> supplier) {
-        if (wasShutdown) {
-            throw new IllegalStateException("Pool was shut down and does not accept new tasks.");
-        }
         var task = new ThreadPoolTask(supplier);
-        synchronized (taskQueue) {
-            taskQueue.add(task);
-        }
+        task.submit();
         return task;
     }
 
@@ -74,6 +72,7 @@ public class ThreadPool<T> {
         private volatile boolean ready = false;
         private @Nullable T result = null;
         private @Nullable Exception exception = null;
+        private final @NotNull List <ThreadPoolTask> toApply = new ArrayList<>();
 
         private ThreadPoolTask(@NotNull Supplier<T> supplier) {
             this.supplier = supplier;
@@ -92,12 +91,14 @@ public class ThreadPool<T> {
          */
         @Override
         @Nullable public T get() throws LightExecutionException {
-            synchronized (supplier) {
-                while (!ready) {
-                    try {
-                        supplier.wait();
-                    } catch (InterruptedException exception) {
-                        throw new LightExecutionException("Interrupted calculation: " + exception.getMessage());
+            if (!ready) { // optimization to simultaneously calculate gets after execution
+                synchronized (supplier) {
+                    while (!ready) {
+                        try {
+                            supplier.wait();
+                        } catch (InterruptedException exception) {
+                            throw new LightExecutionException("Interrupted calculation: " + exception.getMessage());
+                        }
                     }
                 }
             }
@@ -105,6 +106,18 @@ public class ThreadPool<T> {
                 throw new LightExecutionException(exception);
             }
             return result;
+        }
+
+        /** Submits this task to be executed in the ThreadPool.
+         * @throws IllegalStateException if ThreadPool was shut down.
+         */
+        private void submit() {
+            if (wasShutdown) {
+                throw new IllegalStateException("Pool was shut down and does not accept new tasks.");
+            }
+            synchronized (taskQueue) {
+                taskQueue.add(this);
+            }
         }
 
         /** Executes the task by getting the result from the supplier, is run once. */
@@ -118,6 +131,9 @@ public class ThreadPool<T> {
             synchronized (supplier) {
                 supplier.notifyAll();
             }
+            synchronized (toApply) {
+                toApply.forEach(ThreadPoolTask::submit);
+            }
         }
 
         /**
@@ -127,13 +143,21 @@ public class ThreadPool<T> {
          */
         @Override
         @NotNull public LightFuture<T> thenApply(@NotNull Function<T, T> function) {
-            return ThreadPool.this.add(() -> {
+            var task = new ThreadPoolTask(() -> {
                 try {
                     return function.apply(ThreadPoolTask.this.get());
                 } catch (LightExecutionException exception) {
                     throw new RuntimeException(exception);
                 }
             });
+            synchronized (toApply) {
+                if (ready) {
+                    task.submit();
+                } else {
+                    toApply.add(task);
+                }
+            }
+            return task;
         }
     }
 }
