@@ -66,7 +66,10 @@ public class ThreadPool {
         return task;
     }
 
-    /** Class that stores tasks for this ThreadPool. */
+    /**
+     * Class that stores tasks for this ThreadPool.
+     * @param <T> the type of resulting value for the task.
+     */
     private class ThreadPoolTask<T> implements LightFuture<T> {
         private final @NotNull Supplier<T> supplier;
         private volatile boolean ready = false;
@@ -139,6 +142,7 @@ public class ThreadPool {
         /**
          * Applies the given function to the result of the task.
          * @param function a function to apply to the result of this task.
+         * @param <R> the type of the new task.
          * @return a new LightFuture task.
          */
         @Override
