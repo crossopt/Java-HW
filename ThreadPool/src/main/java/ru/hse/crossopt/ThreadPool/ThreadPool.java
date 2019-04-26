@@ -58,6 +58,9 @@ public class ThreadPool<T> {
      * @return the created task.
      */
     @NotNull public LightFuture<T> add(@NotNull Supplier<T> supplier) {
+        if (wasShutdown) {
+            throw new IllegalStateException("Pool was shut down and does not accept new tasks.");
+        }
         var task = new ThreadPoolTask(supplier);
         synchronized (taskQueue) {
             taskQueue.add(task);

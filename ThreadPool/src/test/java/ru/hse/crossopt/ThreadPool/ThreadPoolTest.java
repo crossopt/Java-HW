@@ -215,9 +215,7 @@ class ThreadPoolTest {
         }
         pool.shutdown();
         Thread.sleep(1000);
-        LightFuture<String> task = pool.add(() -> "Task after interrupt");
-        Thread.sleep(1000);
-        assertFalse(task.isReady());
+        assertThrows(IllegalStateException.class, () -> pool.add(() -> "Task after interrupt"));
     }
 
     @Test
@@ -228,9 +226,7 @@ class ThreadPoolTest {
         }
         pool.shutdown();
         Thread.sleep(1000);
-        LightFuture<String> task = pool.add(() -> "Task after interrupt");
-        Thread.sleep(1000);
-        assertFalse(task.isReady());
+        assertThrows(IllegalStateException.class, () -> pool.add(() -> "Task after interrupt"));
     }
 
     @Test
