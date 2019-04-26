@@ -75,7 +75,7 @@ public class ThreadPool {
         private volatile boolean ready = false;
         private @Nullable T result = null;
         private @Nullable Exception exception = null;
-        private final @NotNull List <ThreadPoolTask> toApply = new ArrayList<>();
+        private final @NotNull List<ThreadPoolTask<?>> toApply = new ArrayList<>();
 
         private ThreadPoolTask(@NotNull Supplier<T> supplier) {
             this.supplier = supplier;
@@ -95,10 +95,10 @@ public class ThreadPool {
         @Override
         @Nullable public T get() throws LightExecutionException {
             if (!ready) { // optimization to simultaneously calculate gets after execution
-                synchronized (supplier) {
+                synchronized (this) {
                     while (!ready) {
                         try {
-                            supplier.wait();
+                            wait();
                         } catch (InterruptedException exception) {
                             throw new LightExecutionException(exception);
                         }
@@ -131,8 +131,8 @@ public class ThreadPool {
                 this.exception = exception;
             }
             ready = true;
-            synchronized (supplier) {
-                supplier.notifyAll();
+            synchronized (this) {
+                notifyAll();
             }
             synchronized (toApply) {
                 toApply.forEach(ThreadPoolTask::submit);
