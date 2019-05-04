@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
@@ -46,11 +47,15 @@ public class ThreadPool {
         }
     }
 
-    /** Shuts down ThreadPool and interrupts all threads in it. */
-    public void shutdown() {
+    /**
+     * Shuts down ThreadPool and interrupts all threads in it. Joins all threads afterwards.
+     * @throws InterruptedException if joining of threads was interrupted.
+     */
+    public void shutdown() throws InterruptedException {
         wasShutdown = true;
+        Arrays.stream(threads).forEach(Thread::interrupt);
         for (var thread : threads) {
-            thread.interrupt();
+            thread.join();
         }
     }
 
@@ -61,7 +66,10 @@ public class ThreadPool {
      * @return the created task.
      */
     @NotNull public <T> LightFuture<T> add(@NotNull Supplier<T> supplier) {
-        var task = new ThreadPoolTask<>(supplier);
+        if (wasShutdown) {
+            throw new IllegalStateException("Pool was shut down and does not accept new tasks.");
+        }
+        ThreadPoolTask<T> task = new ThreadPoolTask<>(supplier);
         task.submit();
         return task;
     }
