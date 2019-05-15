@@ -26,12 +26,6 @@ class MD5HasherTest {
         return digest.digest();
     }
 
-    private byte[] hashDirectoryName(String name) throws NoSuchAlgorithmException {
-        var digest = MessageDigest.getInstance("MD5");
-        digest.update(name.getBytes());
-        return digest.digest();
-    }
-
     @Test
     void hashMD5SimpleFile() throws IOException, NoSuchAlgorithmException {
         var file = new File(path + "simpleFile");
