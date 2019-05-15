@@ -77,26 +77,14 @@ class MD5HasherTest {
     }
 
     @Test
-    void hashMD5EmptyDirectory() throws IOException, NoSuchAlgorithmException {
-        var file = new File(path + "emptyDirectory");
-        assertEquals(Arrays.toString(hashDirectoryName("emptyDirectory")), Arrays.toString(MD5Hasher.hashMD5(file)));
-    }
-
-    @Test
-    void parallelHashMD5EmptyDirectory() throws IOException, NoSuchAlgorithmException {
-        var file = new File(path + "emptyDirectory");
-        assertEquals(Arrays.toString(hashDirectoryName("emptyDirectory")), Arrays.toString(MD5Hasher.parallelHashMD5(file)));
-    }
-
-    @Test
-    void hashMD5DifferentNameSameDirectories() throws IOException, NoSuchAlgorithmException {
+    void hashMD5DifferentNameSameDirectories() throws IOException {
         var file = new File(path + "oneDirectory");
         var otherFile = new File(path + "sameDirectory");
         assertNotEquals(Arrays.toString(MD5Hasher.hashMD5(file)), Arrays.toString(MD5Hasher.hashMD5(otherFile)));
     }
 
     @Test
-    void parallelHashMD5DifferentNameSameDirectories() throws IOException, NoSuchAlgorithmException {
+    void parallelHashMD5DifferentNameSameDirectories() throws IOException {
         var file = new File(path + "oneDirectory");
         var otherFile = new File(path + "sameDirectory");
         assertNotEquals(Arrays.toString(MD5Hasher.parallelHashMD5(file)), Arrays.toString(MD5Hasher.parallelHashMD5(otherFile)));
