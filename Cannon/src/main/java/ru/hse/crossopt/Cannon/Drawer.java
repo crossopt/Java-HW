@@ -2,6 +2,7 @@ package ru.hse.crossopt.Cannon;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
@@ -12,10 +13,10 @@ import java.util.Arrays;
  */
 public class Drawer {
     private static final int TRIANGLE_EDGES = 3;
-    private final GraphicsContext graphicsContext;
+    private final @NotNull GraphicsContext graphicsContext;
 
     /** Creates a Drawer that will draw on the given GraphicsContext. */
-    public Drawer(GraphicsContext graphicsContext) {
+    public Drawer(@NotNull GraphicsContext graphicsContext) {
         this.graphicsContext = graphicsContext;
     }
 
@@ -26,7 +27,7 @@ public class Drawer {
      * @param radius the circle's radius.
      * @param color the circle's color.
      */
-    public void drawCircle(int xCenter, int yCenter, int radius, Color color) {
+    public void drawCircle(int xCenter, int yCenter, int radius, @NotNull Color color) {
         setColor(color);
         double newRadius = convertLength(radius);
         double newX = convertXPoint(xCenter) - newRadius / 2;
@@ -40,7 +41,7 @@ public class Drawer {
      * @param yCoordinates an array with the triangle's points' Y-coordinates, in order.
      * @param color the triangle's color.
      */
-    public void drawTriangle(int[] xCoordinates, int[] yCoordinates, Color color) {
+    public void drawTriangle(@NotNull int[] xCoordinates, @NotNull int[] yCoordinates, @NotNull Color color) {
         setColor(color);
         double[] newX = Arrays.stream(xCoordinates).mapToDouble(this::convertXPoint).toArray();
         double[] newY = Arrays.stream(yCoordinates).mapToDouble(this::convertYPoint).toArray();
@@ -55,7 +56,7 @@ public class Drawer {
      * @param y1 the Y-coordinate of the line's end.
      * @param color the line's color.
      */
-    public void drawLine(int x0, int y0, int x1, int y1, Color color) {
+    public void drawLine(int x0, int y0, int x1, int y1, @NotNull Color color) {
         setColor(color);
         graphicsContext.strokeLine(convertXPoint(x0), convertYPoint(y0), convertXPoint(x1), convertYPoint(y1));
     }
@@ -72,7 +73,7 @@ public class Drawer {
      * @param y the Y-coordinate where the text should be written.
      * @param color the text's color.
      */
-    public void write(String text, int x, int y, Color color) {
+    public void write(@NotNull String text, int x, int y, @NotNull Color color) {
         setColor(color);
         graphicsContext.strokeText(text, convertXPoint(x), convertYPoint(y));
     }
@@ -89,7 +90,7 @@ public class Drawer {
         return length * widthCoefficient();
     }
 
-    private void setColor(Color color) {
+    private void setColor(@NotNull Color color) {
         graphicsContext.setFill(color);
         graphicsContext.setStroke(color);
     }

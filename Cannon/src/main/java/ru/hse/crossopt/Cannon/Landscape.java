@@ -1,6 +1,7 @@
 package ru.hse.crossopt.Cannon;
 
 import javafx.scene.paint.Color;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -16,12 +17,12 @@ public class Landscape {
     /** The screen height in Landscape units. */
     public static final int HEIGHT = 800;
 
-    private final Drawer drawer;
-    private final ArrayList<Mountain> mountains;
-    private final Target target;
+    private final @NotNull Drawer drawer;
+    private final @NotNull ArrayList<Mountain> mountains;
+    private final @NotNull Target target;
 
     /** Creates a random landscape that uses the given Drawer to display its objects. */
-    public Landscape(Drawer drawer) {
+    public Landscape(@NotNull Drawer drawer) {
         this.drawer = drawer;
         Random random = new Random(System.currentTimeMillis());
         mountains = new ArrayList<>();

@@ -1,6 +1,8 @@
 package ru.hse.crossopt.Cannon;
 
 import javafx.scene.paint.Color;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
@@ -19,14 +21,14 @@ public class Cannon {
 
     private double angle;
     private int x;
-    private Bullet currentBullet = null;
+    private @Nullable Bullet currentBullet = null;
     private int bulletType = 1;
 
-    private Landscape landscape;
-    private Drawer drawer;
+    private @NotNull Landscape landscape;
+    private @NotNull Drawer drawer;
 
     /** Creates a cannon on the given landscape, that uses the given Drawer to display its objects. */
-    public Cannon(Landscape landscape, Drawer drawer) {
+    public Cannon(@NotNull Landscape landscape, @NotNull Drawer drawer) {
         this.drawer = drawer;
         this.landscape = landscape;
         x = WHEEL_SIZE * 2;
