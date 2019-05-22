@@ -48,8 +48,8 @@ public class Drawer {
         checkArgument(xCoordinates.length == TRIANGLE_EDGES && yCoordinates.length == TRIANGLE_EDGES,
                 "Triangle should have 3 angles");
         setColor(color);
-        double[] newX = Arrays.stream(xCoordinates).mapToDouble(this::convertXPoint).toArray();
-        double[] newY = Arrays.stream(yCoordinates).mapToDouble(this::convertYPoint).toArray();
+        var newX = Arrays.stream(xCoordinates).mapToDouble(this::convertXPoint).toArray();
+        var newY = Arrays.stream(yCoordinates).mapToDouble(this::convertYPoint).toArray();
         graphicsContext.fillPolygon(newX, newY, TRIANGLE_EDGES);
     }
 

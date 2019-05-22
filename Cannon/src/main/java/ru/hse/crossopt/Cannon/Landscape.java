@@ -24,7 +24,7 @@ public class Landscape {
     /** Creates a random landscape that uses the given Drawer to display its objects. */
     public Landscape(@NotNull Drawer drawer) {
         this.drawer = drawer;
-        Random random = new Random(System.currentTimeMillis());
+        var random = new Random(System.currentTimeMillis());
         mountains = new ArrayList<>();
         int currentX = 0;
         int xCoefficient = WIDTH / 5;

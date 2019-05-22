@@ -25,19 +25,18 @@ public class CannonGame extends Application {
         var center = new GridPane();
         center.setPrefSize(Landscape.WIDTH, Landscape.HEIGHT);
 
-        Canvas canvas = new Canvas();
+        var canvas = new Canvas();
         center.getChildren().add(canvas);
         canvas.widthProperty().bind(center.widthProperty());
         canvas.heightProperty().bind(center.heightProperty());
 
-
-        Scene scene = new Scene(center);
+        var scene = new Scene(center);
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        Drawer drawer = new Drawer(canvas.getGraphicsContext2D());
-        Landscape landscape = new Landscape(drawer);
-        Cannon cannon = new Cannon(landscape, drawer);
+        var drawer = new Drawer(canvas.getGraphicsContext2D());
+        var landscape = new Landscape(drawer);
+        var cannon = new Cannon(landscape, drawer);
 
         primaryStage.getScene().setOnKeyPressed(event -> {
             KeyCode code = event.getCode();
@@ -56,7 +55,7 @@ public class CannonGame extends Application {
             }
         });
 
-        Timeline mainLoop = new Timeline();
+        var mainLoop = new Timeline();
         mainLoop.setCycleCount(Timeline.INDEFINITE);
         mainLoop.getKeyFrames().add(new KeyFrame(animationSpeed, event -> {
             drawer.clear();

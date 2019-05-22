@@ -57,7 +57,6 @@ public class Cannon {
 
     /** Draws the cannon as a wheel and the shooting thing, also draws the cannon's bullet if it exists. */
     public void draw() {
-        int y = landscape.getYForX(x);
         drawer.drawCircle(x, landscape.getYForX(x), WHEEL_SIZE, Color.RED);
         drawer.drawLine(x, landscape.getYForX(x) + WHEEL_SIZE / 4, getShooterX(), getShooterY(), Color.RED);
         if (currentBullet != null && currentBullet.exists()) {
