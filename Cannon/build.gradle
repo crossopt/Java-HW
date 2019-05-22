@@ -1,0 +1,20 @@
+plugins {
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.7'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.3.2'
+}
+
+javafx {
+    version = "12"
+    modules = [ 'javafx.controls' ]
+}
+
+mainClassName = 'ru.hse.crossopt.Cannon.CannonGame'
