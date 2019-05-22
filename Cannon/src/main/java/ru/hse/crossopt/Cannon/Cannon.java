@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
@@ -80,6 +81,7 @@ public class Cannon {
      * @param type the bullet type, an integer from 1 to LARGEST_BULLET.
      */
     public void setBulletType(int type) {
+        checkArgument(1 <= type && type <= LARGEST_BULLET, "Bullet size out of range.");
         bulletType = type;
     }
 

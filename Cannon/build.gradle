@@ -8,9 +8,8 @@ repositories {
 }
 
 dependencies {
-    compile('org.jetbrains:annotations:16.0.2')
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.3.2'
+    compile 'com.google.guava:guava:27.1-jre'
+    compile 'org.jetbrains:annotations:16.0.2'
 }
 
 javafx {

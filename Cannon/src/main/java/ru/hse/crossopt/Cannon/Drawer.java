@@ -6,6 +6,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /**
  * Class that draws the necessary objects for the game.
  * Also responsible for converting coordinates from Landscape units to something recognized by JavaFX.
@@ -28,6 +30,7 @@ public class Drawer {
      * @param color the circle's color.
      */
     public void drawCircle(int xCenter, int yCenter, int radius, @NotNull Color color) {
+        checkArgument(radius > 0, "Radius should be positive.");
         setColor(color);
         double newRadius = convertLength(radius);
         double newX = convertXPoint(xCenter) - newRadius / 2;
@@ -42,6 +45,8 @@ public class Drawer {
      * @param color the triangle's color.
      */
     public void drawTriangle(@NotNull int[] xCoordinates, @NotNull int[] yCoordinates, @NotNull Color color) {
+        checkArgument(xCoordinates.length == TRIANGLE_EDGES && yCoordinates.length == TRIANGLE_EDGES,
+                "Triangle should have 3 angles");
         setColor(color);
         double[] newX = Arrays.stream(xCoordinates).mapToDouble(this::convertXPoint).toArray();
         double[] newY = Arrays.stream(yCoordinates).mapToDouble(this::convertYPoint).toArray();
