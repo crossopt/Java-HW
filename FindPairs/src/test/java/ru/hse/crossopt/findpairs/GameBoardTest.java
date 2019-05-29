@@ -1,6 +1,7 @@
 package ru.hse.crossopt.findpairs;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,7 +14,7 @@ class GameBoardTest {
         board = new GameBoard(6);
     }
 
-    @Test
+    @RepeatedTest(3)
     void boardGenerationIsCorrect() {
         int cardsAmount = 18;
         int[] neededNumbers = new int[cardsAmount];
