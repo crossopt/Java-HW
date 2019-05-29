@@ -36,7 +36,7 @@ public class Card {
     }
 
     /** Returns the button that depicts this card. */
-    public Button getButton() {
+    public @Nullable Button getButton() {
         return button;
     }
 
