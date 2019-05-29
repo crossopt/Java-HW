@@ -1,0 +1,27 @@
+plugins {
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.7'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.google.guava:guava:27.1-jre'
+    compile 'org.jetbrains:annotations:16.0.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.3.2'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+
+javafx {
+    version = "12"
+    modules = [ 'javafx.controls' ]
+}
+
+mainClassName = 'ru.hse.crossopt.findpairs.FindPairs'
