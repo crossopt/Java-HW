@@ -15,7 +15,6 @@ import static com.google.common.base.Preconditions.checkState;
  * Methods with After annotation are invoked after each test method.
  */
 public class TestRunner {
-
     /**
      * Runs all test for the given class.
      * @param args the name of the class for which tests should be run.
@@ -41,6 +40,11 @@ public class TestRunner {
         }
     }
 
+    /**
+     * Runs all tests (with assorted after, afterClass, before, beforeClass methods) for the given class.
+     * @param testClass a class for which to run methods.
+     * @throws MyJUnitException if running the tests failed.
+     */
     public static void runTests(Class<?> testClass) throws MyJUnitException {
         ArrayList<Method> beforeClassMethods = new ArrayList<>();
         ArrayList<Method> beforeMethods = new ArrayList<>();
@@ -88,7 +92,7 @@ public class TestRunner {
                 method.invoke(testClass.getDeclaredConstructor().newInstance());
             }
         } catch (ReflectiveOperationException exception) {
-            exception.printStackTrace();
+            throw new MyJUnitException("Invoking methods for class failed.");
         }
     }
 
@@ -106,18 +110,19 @@ public class TestRunner {
             try {
                 testMethod.invoke(testClass.getDeclaredConstructor().newInstance());
             } catch (Throwable throwable) {
+                wasException = true;
                 if (throwable.getCause().getClass().equals(testAnnotation.expected())) {
                     testStatus.pass(testMethod.getName());
-                    wasException = true;
                 } else {
-                    testStatus.fail(testMethod.getName(), throwable.getMessage());
+                    testStatus.fail(testMethod.getName(),
+                            throwable.getCause().getClass().getName() + ": " + throwable.getCause().getMessage());
                 }
             }
             if (!wasException) {
                 if (Test.DefaultException.class.equals(testAnnotation.expected())) {
                     testStatus.pass(testMethod.getName());
                 } else {
-                    testStatus.fail(testMethod.getName(), "Expected exception " + testAnnotation.expected());
+                    testStatus.fail(testMethod.getName(), "expected exception " + testAnnotation.expected().getName());
                 }
             }
             runMethods(testClass, afterMethods);
@@ -152,14 +157,14 @@ public class TestRunner {
         private void fail(String testName, String message) {
             checkState(startTimeStamp != 0); //start and end of tests should alternate.
             failed++;
-            System.out.printf("Test %s failed in %d ms: %s.", testName, System.currentTimeMillis() - startTimeStamp, message);
+            System.out.printf("Test %s failed in %d ms: %s\n", testName, System.currentTimeMillis() - startTimeStamp, message);
             startTimeStamp = 0;
         }
 
         private void pass(String testName) {
             checkState(startTimeStamp != 0); //start and end of tests should alternate.
             passed++;
-            System.out.printf("Test %s passed in %d ms.", testName, System.currentTimeMillis() - startTimeStamp);
+            System.out.printf("Test %s passed in %d ms.\n", testName, System.currentTimeMillis() - startTimeStamp);
             startTimeStamp = 0;
         }
 
