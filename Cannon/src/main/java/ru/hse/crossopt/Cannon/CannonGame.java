@@ -50,8 +50,8 @@ public class CannonGame extends Application {
                 cannon.decreaseAngle();
             } else if (code == KeyCode.ENTER) {
                 cannon.shoot();
-            } else if (code.isDigitKey() && Integer.parseInt(code.getChar()) <= Cannon.LARGEST_BULLET) {
-                cannon.setBulletType(Integer.parseInt(code.getChar()));
+            } else if (code.isDigitKey() && Integer.parseInt(code.getChar()) <= Cannon.LARGEST_BULLET_RADIUS) {
+                cannon.setBulletRadius(Integer.parseInt(code.getChar()));
             }
         });
 

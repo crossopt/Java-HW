@@ -18,12 +18,12 @@ public class Cannon {
     private final static double ANGLE_STEP = Math.PI / 20;
 
     /** The size of the largest bullet the cannon can possibly shoot. Sizes are numbered from 1, default is 1. */
-    public final static int LARGEST_BULLET = 3;
+    public final static int LARGEST_BULLET_RADIUS = 3;
 
     private double angle;
     private int x;
     private @Nullable Bullet currentBullet = null;
-    private int bulletType = 1;
+    private int currentBulletRadius = 1;
 
     private @NotNull Landscape landscape;
     private @NotNull Drawer drawer;
@@ -71,17 +71,17 @@ public class Cannon {
      */
     public void shoot() {
         if (currentBullet == null || !currentBullet.exists()) {
-            currentBullet = new Bullet(bulletType, getShooterX(), getShooterY(), angle);
+            currentBullet = new Bullet(currentBulletRadius, getShooterX(), getShooterY(), angle);
         }
     }
 
     /**
-     * Changes the bullet type to the given type. Larger bullets are slower, heavier and more explosive.
-     * @param type the bullet type, an integer from 1 to LARGEST_BULLET.
+     * Changes the bullet radius to the given radius. Larger bullets are slower, heavier and more explosive.
+     * @param radius the bullet radius, an integer from 1 to LARGEST_BULLET_RADIUS.
      */
-    public void setBulletType(int type) {
-        checkArgument(1 <= type && type <= LARGEST_BULLET, "Bullet size out of range.");
-        bulletType = type;
+    public void setBulletRadius(int radius) {
+        checkArgument(1 <= radius && radius <= LARGEST_BULLET_RADIUS, "Bullet size out of range.");
+        currentBulletRadius = radius;
     }
 
     private int getShooterX() {
@@ -106,11 +106,11 @@ public class Cannon {
         private final int yOriginal;
         private final double angle;
         private final long startTime;
-        private final int type;
+        private final int bulletRadius;
         private int explosionTime = 0;
 
-        private Bullet(int type, int x, int y, double angle) {
-            this.type = type;
+        private Bullet(int radius, int x, int y, double angle) {
+            this.bulletRadius = radius;
             this.xOriginal = x;
             this.yOriginal = y;
             this.angle = angle;
@@ -161,11 +161,11 @@ public class Cannon {
         }
 
         private int getRadius() {
-            return BASE_RADIUS * type;
+            return BASE_RADIUS * bulletRadius;
         }
 
         private int getSpeed() {
-            return BASE_SPEED / type;
+            return BASE_SPEED / bulletRadius;
         }
     }
 }
