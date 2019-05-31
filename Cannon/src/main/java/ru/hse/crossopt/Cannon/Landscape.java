@@ -17,6 +17,12 @@ public class Landscape {
     /** The screen height in Landscape units. */
     public static final int HEIGHT = 800;
 
+    private static final double DEFAULT_MOUNTAIN_HEIGHT = 1.5;
+    private static final double DEFAULT_MOUNTAIN_WIDTH = 0.5;
+    private static final double MOUNTAIN_HEIGHT_COEFFICIENT = HEIGHT * 0.2;
+    private static final double MOUNTAIN_WIDTH_COEFFICIENT = WIDTH * 0.2;
+    private static final double INSTRUCTION_PROPORTIONS = 0.1;
+
     private final @NotNull Drawer drawer;
     private final @NotNull ArrayList<Mountain> mountains;
     private final @NotNull Target target;
@@ -27,15 +33,14 @@ public class Landscape {
         var random = new Random(System.currentTimeMillis());
         mountains = new ArrayList<>();
         int currentX = 0;
-        int xCoefficient = WIDTH / 5;
-        int yCoefficient = HEIGHT / 5;
-        while (currentX + xCoefficient < WIDTH) {
-            int y = (int)((1.5 + random.nextDouble()) * yCoefficient);
-            int nextX = (int)(currentX + (0.5 + random.nextDouble()) * xCoefficient);
+        while (currentX + MOUNTAIN_WIDTH_COEFFICIENT < WIDTH) {
+            int y = (int)((DEFAULT_MOUNTAIN_HEIGHT + random.nextDouble()) * MOUNTAIN_HEIGHT_COEFFICIENT);
+            int nextX = (int)(currentX + (DEFAULT_MOUNTAIN_WIDTH + random.nextDouble()) * MOUNTAIN_WIDTH_COEFFICIENT);
             mountains.add(new Mountain(currentX, y, nextX));
             currentX = nextX;
         }
-        mountains.add(new Mountain(currentX, (int)((1.5 + random.nextDouble()) * yCoefficient), WIDTH));
+        mountains.add(new Mountain(currentX,
+                (int)((DEFAULT_MOUNTAIN_HEIGHT + random.nextDouble()) * MOUNTAIN_HEIGHT_COEFFICIENT), WIDTH));
         target = new Target();
     }
 
@@ -64,6 +69,8 @@ public class Landscape {
     }
 
     private void writeInstructions() {
+        int instructionWidth = (int)(Landscape.WIDTH * INSTRUCTION_PROPORTIONS);
+        int instructionHeight = (int)(Landscape.HEIGHT * (1 - INSTRUCTION_PROPORTIONS));
         drawer.write( "Welcome to the Cannon Game!\n" +
                 "Press:\n" +
                 "UP/DOWN to change the shooting thing's angle.\n" +
@@ -71,7 +78,7 @@ public class Landscape {
                 "1, 2, 3 to change bullet size.\n" +
                 "ENTER to shoot.\n" +
                 "The game ends when you explode the target.",
-                Landscape.WIDTH / 10, Landscape.HEIGHT * 9 / 10, Color.BLACK);
+                instructionWidth, instructionHeight, Color.BLACK);
     }
 
     /**
