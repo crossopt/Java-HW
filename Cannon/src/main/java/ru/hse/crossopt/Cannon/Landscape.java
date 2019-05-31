@@ -129,7 +129,7 @@ public class Landscape {
         }
 
         private boolean isHitBy(int x, int y, int radius) {
-            return getYForX(x) + 3 * radius >= y || getYForX(x + radius) + 2 * radius >= y;
+            return getYForX(x) + radius >= y || getYForX(x + radius) + radius >= y;
         }
     }
 
