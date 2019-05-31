@@ -17,7 +17,7 @@ public class Cannon {
     private final static int WHEEL_STEP = WHEEL_SIZE / 4;
     private final static double ANGLE_STEP = Math.PI / 20;
 
-    /** The size of the largest bullet the cannon can possibly shoot. Sizes are numbered from 1, default is 1. */
+    /** The radius of the largest bullet the cannon can possibly shoot. */
     public final static int LARGEST_BULLET_RADIUS = 3;
 
     private double angle;

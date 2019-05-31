@@ -11,7 +11,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 /**
  * Class that draws the necessary objects for the game.
  * Also responsible for converting coordinates from Landscape units to something recognized by JavaFX.
- * Not related to furniture.
  */
 public class Drawer {
     private static final int TRIANGLE_EDGES = 3;
