@@ -1,0 +1,20 @@
+plugins {
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.7'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.google.guava:guava:27.1-jre'
+    compile 'org.jetbrains:annotations:16.0.2'
+}
+
+javafx {
+    version = "12"
+    modules = [ 'javafx.controls' ]
+}
+
+mainClassName = 'ru.hse.crossopt.Cannon.CannonGame'
