@@ -53,28 +53,28 @@ public class TestRunner {
         ArrayList<Method> testMethods = new ArrayList<>();
         for (var method : testClass.getDeclaredMethods()) {
             method.setAccessible(true);
-            int foundMethods = 0;
+            int foundAnnotations = 0;
             if (method.getAnnotation(Test.class) != null) {
                 testMethods.add(method);
-                foundMethods++;
+                foundAnnotations++;
             }
             if (method.getAnnotation(BeforeClass.class) != null) {
                 beforeClassMethods.add(method);
-                foundMethods++;
+                foundAnnotations++;
             }
             if (method.getAnnotation(AfterClass.class) != null) {
                 afterClassMethods.add(method);
-                foundMethods++;
+                foundAnnotations++;
             }
             if (method.getAnnotation(Before.class) != null) {
                 beforeMethods.add(method);
-                foundMethods++;
+                foundAnnotations++;
             }
             if (method.getAnnotation(After.class) != null) {
                 afterMethods.add(method);
-                foundMethods++;
+                foundAnnotations++;
             }
-            if (foundMethods > 1) {
+            if (foundAnnotations > 1) {
                 throw new MyJUnitException("More than one method type annotation at " + method.getName());
             }
         }
