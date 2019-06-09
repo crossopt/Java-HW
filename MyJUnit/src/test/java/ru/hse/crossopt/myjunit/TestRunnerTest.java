@@ -70,14 +70,14 @@ class TestRunnerTest {
         checkEndOutputResult(2, 2, 0, 1);
 
         String output = outputStream.toString();
-        assertEquals(1, StringUtils.countMatches(output, "First BeforeClass ran.\n"));
-        assertEquals(1, StringUtils.countMatches(output, "Second BeforeClass ran.\n"));
-        assertEquals(2, StringUtils.countMatches(output,"Before ran.\n"));
-        assertEquals(0, StringUtils.countMatches(output,"Ignored test ran.\n"));
-        assertEquals(1, StringUtils.countMatches(output, "One test ran.\n"));
-        assertEquals(1, StringUtils.countMatches(output, "Another test ran.\n"));
-        assertEquals(2, StringUtils.countMatches(output, "After ran.\n"));
-        assertEquals(1, StringUtils.countMatches(output, "AfterClass ran.\n"));
+        assertEquals(1, StringUtils.countMatches(output, "First BeforeClass ran."));
+        assertEquals(1, StringUtils.countMatches(output, "Second BeforeClass ran."));
+        assertEquals(2, StringUtils.countMatches(output,"Before ran."));
+        assertEquals(0, StringUtils.countMatches(output,"Ignored test ran."));
+        assertEquals(1, StringUtils.countMatches(output, "One test ran."));
+        assertEquals(1, StringUtils.countMatches(output, "Another test ran."));
+        assertEquals(2, StringUtils.countMatches(output, "After ran."));
+        assertEquals(1, StringUtils.countMatches(output, "AfterClass ran."));
     }
 
     @Test
@@ -88,7 +88,7 @@ class TestRunnerTest {
 
     private void checkOutputTestPassed(String testName) {
         String output = outputStream.toString();
-        assertTrue(output.contains("Test " + testName + " started.\n"));
+        assertTrue(output.contains("Test " + testName + " started."));
         assertTrue(output.contains("Test " + testName + " passed in "));
         assertFalse(output.contains("Test " + testName + " ignored"));
         assertFalse(output.contains("Test " + testName + " failed"));
@@ -104,18 +104,18 @@ class TestRunnerTest {
 
     private void checkOutputTestFailed(String testName, String failMessage) {
         String output = outputStream.toString();
-        assertTrue(output.contains("Test " + testName + " started.\n"));
+        assertTrue(output.contains("Test " + testName + " started."));
         assertTrue(output.contains("Test " + testName + " failed in "));
-        assertTrue(output.contains("ms: " + failMessage + "\n"));
+        assertTrue(output.contains("ms: " + failMessage));
         assertFalse(output.contains("Test " + testName + " passed"));
         assertFalse(output.contains("Test " + testName + " ignored"));
     }
 
     private void checkEndOutputResult(int expectedRan, int expectedPassed, int expectedFailed, int expectedIgnored) {
         String output = outputStream.toString();
-        assertTrue(output.contains("Ran " + expectedRan + " tests.\n"));
-        assertTrue(output.contains("Passed " + expectedPassed + " tests.\n"));
-        assertTrue(output.contains("Failed " + expectedFailed + " tests.\n"));
-        assertTrue(output.contains("Ignored " + expectedIgnored + " tests.\n"));
+        assertTrue(output.contains("Ran " + expectedRan + " tests."));
+        assertTrue(output.contains("Passed " + expectedPassed + " tests."));
+        assertTrue(output.contains("Failed " + expectedFailed + " tests."));
+        assertTrue(output.contains("Ignored " + expectedIgnored + " tests."));
     }
 }

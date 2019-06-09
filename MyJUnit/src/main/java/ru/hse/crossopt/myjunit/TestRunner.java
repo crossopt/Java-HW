@@ -145,36 +145,39 @@ public class TestRunner {
 
         private void ignore(String testName, String ignoreReason) {
             ignored++;
-            System.out.printf("Test %s ignored. Reason: %s.\n", testName, ignoreReason);
+            System.out.println(String.format("Test %s ignored. Reason: %s.", testName, ignoreReason));
         }
 
         private void start(String testName) {
             checkState(startTimeStamp == 0); //start and end of tests should alternate.
             started++;
             startTimeStamp = System.currentTimeMillis();
-            System.out.printf("Test %s started.\n", testName);
+            System.out.println(String.format("Test %s started.", testName));
         }
 
         private void fail(String testName, String message) {
             checkState(startTimeStamp != 0); //start and end of tests should alternate.
             failed++;
-            System.out.printf("Test %s failed in %d ms: %s\n", testName, System.currentTimeMillis() - startTimeStamp, message);
+            System.out.println(String.format("Test %s failed in %d ms: %s", testName,
+                    System.currentTimeMillis() - startTimeStamp, message));
             startTimeStamp = 0;
         }
 
         private void pass(String testName) {
             checkState(startTimeStamp != 0); //start and end of tests should alternate.
             passed++;
-            System.out.printf("Test %s passed in %d ms.\n", testName, System.currentTimeMillis() - startTimeStamp);
+            System.out.println(String.format("Test %s passed in %d ms.", testName,
+                    System.currentTimeMillis() - startTimeStamp));
             startTimeStamp = 0;
         }
 
         private void printResults() {
-            System.out.printf("\nRan %d tests.\n", started);
-            System.out.printf("Passed %d tests.\n", passed);
-            System.out.printf("Failed %d tests.\n", failed);
-            System.out.printf("Ignored %d tests.\n", ignored);
-            System.out.printf("Total time was %d ms.\n", System.currentTimeMillis() - globalStartTime);
+            System.out.println(); //empty line to leave break between testing output and the final result.
+            System.out.println(String.format("Ran %d tests.", started));
+            System.out.println(String.format("Passed %d tests.", passed));
+            System.out.println(String.format("Failed %d tests.", failed));
+            System.out.println(String.format("Ignored %d tests.", ignored));
+            System.out.println(String.format("Total time was %d ms.", System.currentTimeMillis() - globalStartTime));
         }
     }
 }
