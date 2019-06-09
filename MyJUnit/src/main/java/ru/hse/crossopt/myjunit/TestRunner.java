@@ -4,6 +4,7 @@ import ru.hse.crossopt.myjunit.annotations.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -46,11 +47,11 @@ public class TestRunner {
      * @throws MyJUnitException if running the tests failed.
      */
     public static void runTests(Class<?> testClass) throws MyJUnitException {
-        ArrayList<Method> beforeClassMethods = new ArrayList<>();
-        ArrayList<Method> beforeMethods = new ArrayList<>();
-        ArrayList<Method> afterClassMethods = new ArrayList<>();
-        ArrayList<Method> afterMethods = new ArrayList<>();
-        ArrayList<Method> testMethods = new ArrayList<>();
+        List<Method> beforeClassMethods = new ArrayList<>();
+        List<Method> beforeMethods = new ArrayList<>();
+        List<Method> afterClassMethods = new ArrayList<>();
+        List<Method> afterMethods = new ArrayList<>();
+        List<Method> testMethods = new ArrayList<>();
         for (var method : testClass.getDeclaredMethods()) {
             method.setAccessible(true);
             int foundAnnotations = 0;
@@ -86,7 +87,7 @@ public class TestRunner {
         status.printResults();
     }
 
-    private static void runMethods(Class<?> testClass, ArrayList<Method> methods) throws MyJUnitException {
+    private static void runMethods(Class<?> testClass, List<Method> methods) throws MyJUnitException {
         try {
             for (var method : methods) {
                 method.invoke(testClass.getDeclaredConstructor().newInstance());
@@ -96,8 +97,8 @@ public class TestRunner {
         }
     }
 
-    private static void runTestMethods(Class<?> testClass, TestStatus testStatus, ArrayList<Method> beforeMethods,
-                                       ArrayList<Method> testMethods, ArrayList<Method> afterMethods) throws MyJUnitException {
+    private static void runTestMethods(Class<?> testClass, TestStatus testStatus, List<Method> beforeMethods,
+                                       List<Method> testMethods, List<Method> afterMethods) throws MyJUnitException {
         for (var testMethod : testMethods) {
             var testAnnotation = testMethod.getAnnotation(Test.class);
             if (!testAnnotation.ignore().equals(Test.EMPTY_REASON)) {
