@@ -96,7 +96,7 @@ class TestRunnerTest {
 
     private void checkOutputTestIgnored(String testName, String ignoreReason) {
         String output = outputStream.toString();
-        assertTrue(output.contains("Test " + testName + " ignored. Reason: " + ignoreReason + ".\n"));
+        assertTrue(output.contains("Test " + testName + " ignored. Reason: " + ignoreReason + "."));
         assertFalse(output.contains("Test " + testName + " started"));
         assertFalse(output.contains("Test " + testName + " passed"));
         assertFalse(output.contains("Test " + testName + " failed"));
